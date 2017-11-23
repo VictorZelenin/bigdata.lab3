@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>CSE490h Tiger Map</title>
+		<script language="JavaScript">
+			var numTiles = 3;  // don't change this
+			var zoomLevel = 6; // default zoomlevel
+			var rowValues = [2, 1, 0]; // default row tile IDs
+			var columnValues = [0, 1, 2]; // default column tile IDs
+			
+			// draws the map with the specified rows, columns, and zoom level
+			function renderMap() {
+				var i;
+				var j;
+				for (i = 0; i < numTiles; i++) {
+					for (j = 0; j < numTiles; j++) {
+						var srcValue;
+							srcValue = "tiles/" +
+								zoomLevel + "/" +
+								rowValues[i] + "_" +
+								columnValues[j] + "_" +
+								zoomLevel + ".png";
+						var imgObj = document.getElementById((i+1) + "_" + (j+1));
+						imgObj.setAttribute("src", srcValue);
+					}
+				}				
+			}
+			
+			function moveLeft() {
+				var i;	
+				for (i = 0; i < numTiles; i++) {
+					columnValues[i]--;
+				}
+				renderMap();
+			}
+			
+			function moveRight() {
+				var i;	
+				for (i = 0; i < numTiles; i++) {
+					columnValues[i]++;
+				}
+				renderMap();
+			}
+			
+			function moveUp() {
+				var i;	
+				for (i = 0; i < numTiles; i++) {
+					rowValues[i]++;
+				}
+				renderMap();
+			}
+			
+			function moveDown() {
+				var i;	
+				for (i = 0; i < numTiles; i++) {
+					rowValues[i]--;
+				}
+				renderMap();
+			}
+			
+			function zoomIn() {
+				if (zoomLevel <= 2) return;
+				
+				var i;
+				var j;
+				zoomLevel--;
+				var centerTile = ( numTiles / 2 + 1 ) | 0;
+				var centerRow = rowValues[centerTile] * 2;
+				var centerCol = columnValues[centerTile] * 2;
+				for (i = 0; i < numTiles; i++) {
+					rowValues[i] = (centerRow - (i - centerTile));
+					columnValues[i] = (centerCol + (i - centerTile));
+				} 
+				renderMap();
+			}
+			
+			function zoomOut() {
+				if (zoomLevel >= 9) return;
+				
+				var i;
+				var j;
+				zoomLevel++;
+				var centerTile = ( numTiles / 2 + 1 ) | 0;
+				var centerRow = ( rowValues[centerTile] / 2 ) | 0;
+				var centerCol = ( columnValues[centerTile] / 2 ) | 0;
+				for (i = 0; i < numTiles; i++) {
+					rowValues[i] = (centerRow - (i - centerTile));
+					columnValues[i] = (centerCol + (i - centerTile));
+				} 
+				renderMap();
+			}
+		</script>
+		
+    </head>
+    <body onload="renderMap()">
+		<table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td>
+					
+				</td>
+				<td>
+					<img src="html_img/zoom_in.GIF" onclick="zoomIn();">
+					<img src="html_img/zoom_out.GIF" onclick="zoomOut();">
+				</td>
+				<td>
+					<p align="center">
+						<img src="html_img/up_arrow.PNG" onclick="moveUp()">
+					</p>
+				</td>
+				<td>
+					<h2>CSE490h Geo Map</h2>
+				</td>
+				
+				<td>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					
+				</td>				
+				<td>
+					<img width="256" height="256" src="html_img/tile_loading.png" alt="" id="1_1"/>
+				</td>
+				<td>
+					<img width="256" height="256" src="html_img/tile_loading.png" alt="" id="1_2" />
+				</td>
+				<td>
+					<img width="256" height="256" src="html_img/tile_loading.png" alt="" id="1_3" />
+				</td>
+				<td>
+					
+				</td>							
+			</tr>
+			
+			<tr>
+				<td>
+					<img src="html_img/left_arrow.PNG" onclick="moveLeft()">
+				</td>				
+				<td>
+					<img width="256" height="256" src="html_img/tile_loading.png" alt="" id="2_1"/>
+				</td>
+				<td>
+					<img width="256" height="256" src="html_img/tile_loading.png" alt="" id="2_2" />
+				</td>
+				<td>
+					<img width="256" height="256" src="html_img/tile_loading.png" alt="" id="2_3" />
+				</td>	
+				<td>
+					<img src="html_img/right_arrow.PNG" onclick="moveRight()">
+				</td>									
+			</tr>
+			
+			<tr>
+				<td>
+					
+				</td>				
+				<td>
+					<img width="256" height="256" src="html_img/tile_loading.png" alt="" id="3_1"/>
+				</td>
+				<td>
+					<img width="256" height="256" src="html_img/tile_loading.png" alt="" id="3_2" />
+				</td>
+				<td>
+					<img width="256" height="256" src="html_img/tile_loading.png" alt="" id="3_3" />
+				</td>
+				<td>
+					
+				</td>			
+			</tr>
+			<tr>
+				<td colspan="6">
+					<p align="center">
+						<img src="html_img/down_arrow.PNG" onclick="moveDown()">
+					</p>
+				</td>
+			</tr>
+
+
+		</table>
+		
+    </body>
+</html>
