@@ -14,6 +14,8 @@ import ua.kpi.cad.lab3.core.protocol.GeoRecord;
  */
 public abstract class GeoRecordParser {
 
+    private static final int QUANTITY_OF_DIGITS_IN_COORDS = 6;
+
     /**
      * Construct the associated key to a given record
      *
@@ -51,4 +53,19 @@ public abstract class GeoRecordParser {
         }
     }
 
+    /**
+     * All coordinates are expressed as a signed integer with six
+     * decimal places of precision implied (see the section, Positional Accuracy,
+     * in Chapter 5).
+     */
+    protected double parseGeoCoordinateField(String rawValue) {
+        try {
+            String mainPart = rawValue.substring(0, rawValue.length() - QUANTITY_OF_DIGITS_IN_COORDS);
+            String digits = rawValue.substring(rawValue.length() - QUANTITY_OF_DIGITS_IN_COORDS);
+
+            return Double.parseDouble(String.format("%s.%s", mainPart, digits));
+        } catch (NumberFormatException exn) {
+            throw new IllegalArgumentException("Wrong coordinate.");
+        }
+    }
 }

@@ -34,15 +34,15 @@ public class TigerRecordType1Parser extends GeoRecordParser {
         record.setDirectionSuffix(row.substring(53, 55).trim());
         record.setFeatureType(row.substring(49, 53).trim());
 
-        record.setStartAddressLeft(parseLongValue(row.substring(58, 69).trim()));
-        record.setEndAddressLeft(parseLongValue(row.substring(79, 80).trim()));
-        record.setStartAddressRight(parseLongValue(row.substring(80, 91).trim()));
-        record.setEndAddressRight(parseLongValue(row.substring(91, 102).trim()));
+        record.setStartAddressLeft(tryParseLong(row.substring(58, 69).trim(), 0L));
+        record.setEndAddressLeft(tryParseLong(row.substring(79, 80).trim(), 0L));
+        record.setStartAddressRight(tryParseLong(row.substring(80, 91).trim(), 0L));
+        record.setEndAddressRight(tryParseLong(row.substring(91, 102).trim(), 0L));
 
-        record.setZipLeft(parseIntField(row.substring(106, 111).trim()));
-        record.setZipRight(parseIntField(row.substring(116, 121).trim()));
+        record.setZipLeft(tryParseInt(row.substring(106, 111).trim(), 0));
+        record.setZipRight(tryParseInt(row.substring(116, 121).trim(), 0));
 
-        record.setStateCode(parseIntField(row.substring(130, 132).trim()));
+        record.setStateCode(tryParseInt(row.substring(130, 132).trim(), 0));
 
         record.setStartLat(parseGeoCoordinateField(row.substring(200, 209).trim()));
         record.setStartLong(parseGeoCoordinateField(row.substring(190, 200).trim()));
@@ -50,41 +50,5 @@ public class TigerRecordType1Parser extends GeoRecordParser {
         record.setEndLong(parseGeoCoordinateField(row.substring(209, 219).trim()));
 
         return record;
-    }
-
-    private int parseIntField(String rawValue) {
-        try {
-            return Integer.parseInt(rawValue);
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    private long parseLongValue(String rawValue) {
-        try {
-            return Long.parseLong(rawValue);
-        } catch (Exception e) {
-            return 0L;
-        }
-    }
-
-    private double parseDouble(String rawValue) {
-        try {
-            return Double.parseDouble(rawValue);
-        } catch (Exception e) {
-            return 0.0;
-        }
-    }
-
-    /**
-     * All coordinates are expressed as a signed integer with six
-     * decimal places of precision implied (see the section, Positional Accuracy,
-     * in Chapter 5).
-     */
-    private double parseGeoCoordinateField(String rawValue) {
-        String mainPart = rawValue.substring(0, rawValue.length() - 6);
-        String digits = rawValue.substring(rawValue.length() - 6);
-
-        return Double.parseDouble(String.format("%s.%s", mainPart, digits));
     }
 }
