@@ -7,6 +7,7 @@ import java.io.IOException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import org.apache.hadoop.io.WritableComparable;
 
@@ -18,6 +19,7 @@ import org.apache.hadoop.io.WritableComparable;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString
 public class TigerRecordType2 implements WritableComparable<TigerRecordType2> {
     public int compareTo(TigerRecordType2 o) {
         throw new RuntimeException("Not Implemented");
@@ -26,24 +28,24 @@ public class TigerRecordType2 implements WritableComparable<TigerRecordType2> {
     /**
      * The line id that links this polygon to a type 1 record
      */
-    int lineId;
+    private int lineId;
     /**
      * Record of type 2 contains field RTSQ which is a sequence number, i.e. if
      * there are more than one record of type 2 related to single lineId,
      * this field represents position of current record in sequence of other type-2
      * records
      */
-    int sequenceNum;
+    private int sequenceNum;
 
     /**
      * The feature type. This field must be populated by a join
      */
-    String featureType;
+    private String featureType;
     /**
      * The list of latitudes and longitudes
      */
-    double listLat[];
-    double listLong[];
+    private double listLat[];
+    private double listLong[];
 
     public void readFields(DataInput d) throws IOException {
     }

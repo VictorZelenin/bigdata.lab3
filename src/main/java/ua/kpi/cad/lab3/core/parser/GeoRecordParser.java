@@ -24,7 +24,7 @@ public abstract class GeoRecordParser {
      */
     public GeoRecordKey getKey(GeoRecord record) {
         GeoRecordKey key = new GeoRecordKey();
-        key.recordType = record.getRecordType();
+        key.setRecordType(record.getRecordType());
         return key;
     }
 
