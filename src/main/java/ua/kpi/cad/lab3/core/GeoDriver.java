@@ -2,16 +2,16 @@ package ua.kpi.cad.lab3.core;
 
 import java.io.IOException;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.mapred.FileInputFormat;
-import org.apache.hadoop.mapred.FileOutputFormat;
-import org.apache.hadoop.mapred.JobClient;
-import org.apache.hadoop.mapred.JobConf;
-import org.apache.hadoop.mapred.SequenceFileInputFormat;
-import org.apache.hadoop.mapred.SequenceFileOutputFormat;
-import org.apache.hadoop.mapred.TextInputFormat;
-import org.apache.hadoop.mapred.TextOutputFormat;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.log4j.Logger;
 import ua.kpi.cad.lab3.core.divider.TileSetDivider;
 import ua.kpi.cad.lab3.core.protocol.GeoRecordKey;
@@ -23,7 +23,7 @@ import ua.kpi.cad.lab3.core.protocol.GeoRecord;
  * This class sets up the mapreduce pipeline that we use to
  * filter (pre-process) the geographic data, perform inner joins,
  * compute the geocode index, and finally, render the map tiles.
- *
+ * <p>
  * You should not need to modify the flow or parameters in this
  * file significantly (if at all). You will, however, need to plug in
  * your own mappers, reducers, combiners, partitioners, and writable
@@ -32,6 +32,7 @@ import ua.kpi.cad.lab3.core.protocol.GeoRecord;
  * your own code.
  *
  * @author Slava Chernyak
+ * @author dev.syor
  */
 public class GeoDriver {
     private static final Logger logger = Logger.getLogger(GeoDriver.class.toString());
@@ -73,7 +74,7 @@ public class GeoDriver {
      * Here is where we run all of the mapreduce passes that get us from
      * geographic data to map tiles.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
         // configure the input directories for the raw data
 
         String inputTiger = parseStringArg(args, ARG_INPUT_PATH_TIGER, null);
@@ -157,34 +158,29 @@ public class GeoDriver {
      * See protocol.BgnRecord for a list of the fields that
      * should be populated.
      */
-    public static void filterBgnData(String inputPath) {
-        JobConf conf = new JobConf(GeoDriver.class);
-        JobClient client = new JobClient();
-        conf.setJobName("BGN DATA filter pass");
+    public static void filterBgnData(String inputPath) throws IOException, ClassNotFoundException, InterruptedException {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "BGN DATA filter pass");
+        job.setJarByClass(GeoDriver.class);
 
-        conf.setInputFormat(TextInputFormat.class);
-        conf.setMapOutputKeyClass(GeoRecordKey.class);
-        conf.setMapOutputValueClass(GeoRecord.class);
+        job.setInputFormatClass(TextInputFormat.class);
+        job.setMapOutputKeyClass(GeoRecord.class);
+        job.setMapOutputValueClass(GeoRecord.class);
 
-        conf.setOutputKeyClass(GeoRecordKey.class);
-        conf.setOutputValueClass(GeoRecord.class);
-        conf.setOutputFormat(SequenceFileOutputFormat.class);
+        job.setOutputKeyClass(GeoRecordKey.class);
+        job.setOutputValueClass(GeoRecord.class);
+        job.setOutputFormatClass(SequenceFileOutputFormat.class);
 
         //TODO: Don't forget to set your mapper here
 
         // We set the reduce tasks to 0 so that the output of
         // your mapper will get written straight to the DFS
-        conf.setNumReduceTasks(0);
+        job.setNumReduceTasks(0);
 
-        FileInputFormat.addInputPath(conf, new Path(inputPath));
-        FileOutputFormat.setOutputPath(conf, new Path("output_bgn_filtered"));
+        FileInputFormat.addInputPath(job, new Path(inputPath));
+        FileOutputFormat.setOutputPath(job, new Path("output_bgn_filtered"));
 
-        client.setConf(conf);
-        try {
-            JobClient.runJob(conf);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        job.waitForCompletion(true);
     }
 
     /**
@@ -197,34 +193,29 @@ public class GeoDriver {
      * See protocol.TigerRecordType1 and protocol.TigerRecordType2
      * for a list of the fields that should be populated.
      */
-    public static void filterTigerData(String inputPath) {
-        JobConf conf = new JobConf(GeoDriver.class);
-        JobClient client = new JobClient();
-        conf.setJobName("TIGER DATA filter pass");
+    public static void filterTigerData(String inputPath) throws IOException, ClassNotFoundException, InterruptedException {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "TIGER DATA filter pass");
+        job.setJarByClass(GeoDriver.class);
 
-        conf.setInputFormat(TextInputFormat.class);
-        conf.setMapOutputKeyClass(GeoRecordKey.class);
-        conf.setMapOutputValueClass(GeoRecord.class);
+        job.setInputFormatClass(TextInputFormat.class);
+        job.setMapOutputKeyClass(GeoRecord.class);
+        job.setMapOutputValueClass(GeoRecord.class);
 
-        conf.setOutputKeyClass(GeoRecordKey.class);
-        conf.setOutputValueClass(GeoRecord.class);
-        conf.setOutputFormat(SequenceFileOutputFormat.class);
+        job.setOutputKeyClass(GeoRecordKey.class);
+        job.setOutputValueClass(GeoRecord.class);
+        job.setOutputFormatClass(SequenceFileOutputFormat.class);
 
         //TODO: Don't forget to set your mapper here
 
         // We set the reduce tasks to 0 so that the output of
         // your mapper will get written straight to the DFS
-        conf.setNumReduceTasks(0);
+        job.setNumReduceTasks(0);
 
-        FileInputFormat.addInputPath(conf, new Path(inputPath));
-        FileOutputFormat.setOutputPath(conf, new Path("output_tiger_filtered"));
+        FileInputFormat.addInputPath(job, new Path(inputPath));
+        FileOutputFormat.setOutputPath(job, new Path("output_tiger_filtered"));
 
-        client.setConf(conf);
-        try {
-            JobClient.runJob(conf);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        job.waitForCompletion(true);
     }
 
     /**
@@ -237,34 +228,29 @@ public class GeoDriver {
      * See protocol.PopRecord for a list of fields that should be
      * populated by this pass.
      */
-    public static void filterPopData(String inputPath) {
-        JobConf conf = new JobConf(GeoDriver.class);
-        JobClient client = new JobClient();
-        conf.setJobName("POP DATA filter pass");
+    public static void filterPopData(String inputPath) throws IOException, ClassNotFoundException, InterruptedException {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "POP DATA filter pass");
+        job.setJarByClass(GeoDriver.class);
 
-        conf.setInputFormat(TextInputFormat.class);
-        conf.setMapOutputKeyClass(GeoRecordKey.class);
-        conf.setMapOutputValueClass(GeoRecord.class);
+        job.setInputFormatClass(TextInputFormat.class);
+        job.setMapOutputKeyClass(GeoRecord.class);
+        job.setMapOutputValueClass(GeoRecord.class);
 
-        conf.setOutputKeyClass(GeoRecordKey.class);
-        conf.setOutputValueClass(GeoRecord.class);
-        conf.setOutputFormat(SequenceFileOutputFormat.class);
+        job.setOutputKeyClass(GeoRecordKey.class);
+        job.setOutputValueClass(GeoRecord.class);
+        job.setOutputFormatClass(SequenceFileOutputFormat.class);
 
         //TODO: Don't forget to set your mapper here
 
         // We set the reduce tasks to 0 so that the output of
         // your mapper will get written straight to the DFS
-        conf.setNumReduceTasks(0);
+        job.setNumReduceTasks(0);
 
-        FileInputFormat.addInputPath(conf, new Path(inputPath));
-        FileOutputFormat.setOutputPath(conf, new Path("output_pop_filtered"));
+        FileInputFormat.addInputPath(job, new Path(inputPath));
+        FileOutputFormat.setOutputPath(job, new Path("output_pop_filtered"));
 
-        client.setConf(conf);
-        try {
-            JobClient.runJob(conf);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        job.waitForCompletion(true);
     }
 
     /**
@@ -272,33 +258,28 @@ public class GeoDriver {
      * for the purpose of giving the Population records a latitude
      * and longitude that can be used to render them.
      */
-    public static void joinBgnPopData() {
-        JobConf conf = new JobConf(GeoDriver.class);
-        JobClient client = new JobClient();
-        conf.setJobName("BGN POP join pass");
+    public static void joinBgnPopData() throws IOException, ClassNotFoundException, InterruptedException {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "BGN POP join pass");
+        job.setJarByClass(GeoDriver.class);
 
-        conf.setInputFormat(SequenceFileInputFormat.class);
+        job.setInputFormatClass(SequenceFileInputFormat.class);
         //TODO: You may want to set a map output key class here
-        conf.setMapOutputValueClass(GeoRecord.class);
+        job.setMapOutputValueClass(GeoRecord.class);
 
-        conf.setOutputKeyClass(GeoRecordKey.class);
-        conf.setOutputValueClass(GeoRecord.class);
-        conf.setOutputFormat(SequenceFileOutputFormat.class);
+        job.setOutputKeyClass(GeoRecordKey.class);
+        job.setOutputValueClass(GeoRecord.class);
+        job.setOutputFormatClass(SequenceFileOutputFormat.class);
 
         //TODO: Don't forget to set your mapper and reducer classes
 
         // We pull data from the outputs of the filter pass for both the
         // BGN record type and the Population record type
-        FileInputFormat.addInputPath(conf, new Path("output_pop_filtered"));
-        FileInputFormat.addInputPath(conf, new Path("output_bgn_filtered"));
-        FileOutputFormat.setOutputPath(conf, new Path("output_pop_joined"));
+        FileInputFormat.addInputPath(job, new Path("output_pop_filtered"));
+        FileInputFormat.addInputPath(job, new Path("output_bgn_filtered"));
+        FileOutputFormat.setOutputPath(job, new Path("output_pop_joined"));
 
-        client.setConf(conf);
-        try {
-            JobClient.runJob(conf);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        job.waitForCompletion(true);
     }
 
     /**
@@ -306,31 +287,29 @@ public class GeoDriver {
      * for address resolution. This is a little bit like an inverted index.
      * See the assignment for more detailed info.
      */
-    public static void buildGeocodeIndex() {
-        JobConf conf = new JobConf(GeoDriver.class);
-        JobClient client = new JobClient();
-        conf.setJobName("GEOCODE INDEX pass");
+    public static void buildGeocodeIndex() throws IOException, ClassNotFoundException, InterruptedException {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "GEOCODE INDEX pass");
+        job.setJarByClass(GeoDriver.class);
 
-        conf.setInputFormat(SequenceFileInputFormat.class);
+        job.setInputFormatClass(SequenceFileInputFormat.class);
         //TODO: you may want to set your map output key value
         // types here as well as the output types for the job
 
-        conf.setOutputFormat(TextOutputFormat.class);
+        job.setOutputFormatClass(TextOutputFormat.class);
 
         //TODO: Set your mapper here
-        conf.setNumMapTasks(52);
+        // There is no need to set the number of map tasks for the job.
+        // The number of map tasks equals the number of blocks in the input file.
+        // conf.setNumMapTasks(52);
+
         //TODO: Set your partitioner and reducer here
-        conf.setNumReduceTasks(52);
+        job.setNumReduceTasks(52);
 
-        FileInputFormat.addInputPath(conf, new Path("output_tiger_joined"));
-        FileOutputFormat.setOutputPath(conf, new Path("output_geocode"));
+        FileInputFormat.addInputPath(job, new Path("output_tiger_joined"));
+        FileOutputFormat.setOutputPath(job, new Path("output_geocode"));
 
-        client.setConf(conf);
-        try {
-            JobClient.runJob(conf);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        job.waitForCompletion(true);
     }
 
     /**
@@ -338,32 +317,29 @@ public class GeoDriver {
      * records from the filtered TIGER/Line data. The purpose of this is
      * to assign polygons a feature type.
      */
-    public static void joinTigerLinePoly() {
-        JobConf conf = new JobConf(GeoDriver.class);
-        JobClient client = new JobClient();
-        conf.setJobName("TIGER DATA extract poly features");
+    public static void joinTigerLinePoly() throws IOException, ClassNotFoundException, InterruptedException {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "TIGER DATA extract poly features");
+        job.setJarByClass(GeoDriver.class);
 
-        conf.setInputFormat(SequenceFileInputFormat.class);
+        job.setInputFormatClass(SequenceFileInputFormat.class);
         //TODO: you may want to set your map output key type here
-        conf.setMapOutputValueClass(GeoRecord.class);
+        job.setMapOutputValueClass(GeoRecord.class);
 
-        conf.setOutputKeyClass(GeoRecordKey.class);
-        conf.setOutputValueClass(GeoRecord.class);
-        conf.setOutputFormat(SequenceFileOutputFormat.class);
+        job.setOutputKeyClass(GeoRecordKey.class);
+        job.setOutputValueClass(GeoRecord.class);
+        job.setOutputFormatClass(SequenceFileOutputFormat.class);
 
         //TODO: don't forget to set your mapper and reducer classes
-        conf.setNumMapTasks(100);
-        conf.setNumReduceTasks(100);
+        // There is no need to set the number of map tasks for the job.
+        // The number of map tasks equals the number of blocks in the input file.
+        // conf.setNumMapTasks(52);
+        job.setNumReduceTasks(100);
 
-        FileInputFormat.addInputPath(conf, new Path("output_tiger_filtered"));
-        FileOutputFormat.setOutputPath(conf, new Path("output_tiger_joined"));
+        FileInputFormat.addInputPath(job, new Path("output_tiger_filtered"));
+        FileOutputFormat.setOutputPath(job, new Path("output_tiger_joined"));
 
-        client.setConf(conf);
-        try {
-            JobClient.runJob(conf);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        job.waitForCompletion(true);
     }
 
     /**
@@ -378,7 +354,7 @@ public class GeoDriver {
      */
     public static void doRender(
             double minLat, double minLong, double maxLat,
-            double maxLong, int zoomLevel, boolean extract) {
+            double maxLong, int zoomLevel, boolean extract) throws IOException, ClassNotFoundException, InterruptedException {
         // we scale the number of rendering tasks depending on the zoomlevel and
         // the range we are mapping over. The estimate is based around wanting to
         // have ~300 render tasks for the northwestern quadrant of the US at zoomlevel 6
@@ -389,21 +365,21 @@ public class GeoDriver {
         int numRenderTasks = (int) Math.ceil(((double) areaScaleFactor / (double) constantScaleFactor)
                 * Math.pow(4, 10 - zoomLevel));
 
-        JobConf conf = new JobConf(GeoDriver.class);
-        JobClient client = new JobClient();
-        conf.setJobName("TIGER DATA render pass");
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "TIGER DATA render pass");
+        job.setJarByClass(GeoDriver.class);
 
-        conf.setInputFormat(SequenceFileInputFormat.class);
-        conf.setMapOutputKeyClass(IntWritable.class);
-        conf.setMapOutputValueClass(GeoRecord.class);
+        job.setInputFormatClass(SequenceFileInputFormat.class);
+        job.setMapOutputKeyClass(IntWritable.class);
+        job.setMapOutputValueClass(GeoRecord.class);
 
-        conf.setOutputKeyClass(RenderedTileKey.class);
-        conf.setOutputValueClass(RenderedTile.class);
-        conf.setOutputFormat(SequenceFileOutputFormat.class);
+        job.setOutputKeyClass(RenderedTileKey.class);
+        job.setOutputValueClass(RenderedTile.class);
+        job.setOutputFormatClass(SequenceFileOutputFormat.class);
 
         //TODO: Set your render mapper and reducer here.
-        conf.setNumReduceTasks(numRenderTasks);
-        conf.setSpeculativeExecution(true);
+        job.setNumReduceTasks(numRenderTasks);
+        job.setSpeculativeExecution(true);
 
         // set up the render parameters
         conf.set(TILE_RENDERER_TYPE_KEY, TILE_RENDERER_FAKE);
@@ -417,23 +393,18 @@ public class GeoDriver {
 
         // We add all the paths from which we want to pull features to render
         String outputPathName = "output_render_z" + zoomLevel;
-        FileInputFormat.addInputPath(conf, new Path("output_bgn_filtered"));
-        FileInputFormat.addInputPath(conf, new Path("output_pop_joined"));
-        FileInputFormat.addInputPath(conf, new Path("output_tiger_joined"));
-        FileOutputFormat.setOutputPath(conf, new Path(outputPathName));
+        FileInputFormat.addInputPath(job, new Path("output_bgn_filtered"));
+        FileInputFormat.addInputPath(job, new Path("output_pop_joined"));
+        FileInputFormat.addInputPath(job, new Path("output_tiger_joined"));
+        FileOutputFormat.setOutputPath(job, new Path(outputPathName));
 
-        client.setConf(conf);
-        try {
-            JobClient.runJob(conf);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        job.waitForCompletion(true);
 
         if (extract) {
             try {
                 // extract tiles to the local disk
                 TileExtractor extractor = new TileExtractor();
-                extractor.ExtractTiles(outputPathName, conf, 1);
+                extractor.ExtractTiles(outputPathName, job, 1);
             } catch (IOException e) {
                 e.printStackTrace();
             }

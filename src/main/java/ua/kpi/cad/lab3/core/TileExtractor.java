@@ -6,9 +6,9 @@ import java.io.IOException;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.mapred.FileSplit;
-import org.apache.hadoop.mapred.JobConf;
-import org.apache.hadoop.mapred.SequenceFileRecordReader;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
+import org.apache.hadoop.mapreduce.lib.input.SequenceFileRecordReader;
 import org.apache.log4j.Logger;
 import ua.kpi.cad.lab3.core.divider.TileSetDivider;
 import ua.kpi.cad.lab3.core.protocol.RenderedTile;
@@ -19,6 +19,7 @@ import ua.kpi.cad.lab3.core.protocol.RenderedTileKey;
  * in SequenceFile format onto the local disk.
  *
  * @author Slava Chernyak
+ * @author dev.syor
  */
 public class TileExtractor {
     private final Logger logger = Logger.getLogger(this.getClass().toString());
@@ -28,13 +29,13 @@ public class TileExtractor {
      *
      * @param path     The path to which the result of the mapreduce
      *                 was stored
-     * @param conf     The job conf associated with the render
+     * @param job      The job conf associated with the render
      *                 mapreduce
      * @param numTasks The number of render tasks (number of reducers)
      * @throws IOException
      */
     @SuppressWarnings(value = "deprecation")
-    public void ExtractTiles(String path, JobConf conf, int numTasks)
+    public void ExtractTiles(String path, Job job, int numTasks)
             throws IOException {
         // create the tile directory structure
         for (int j = TileSetDivider.HIGHEST_ZOOMLEVEL; j <= TileSetDivider.LOWEST_ZOOMLEVEL; j++) {
@@ -46,7 +47,7 @@ public class TileExtractor {
 
         // get the filesystem object from the configuration
         // this can be local or the DFS
-        FileSystem fileSystem = FileSystem.get(conf);
+        FileSystem fileSystem = FileSystem.get(job.getConfiguration());
 
         for (int i = 0; i < numTasks; i++) {
             // build the filename string
@@ -64,21 +65,26 @@ public class TileExtractor {
 
             long len = fileSystem.getFileStatus(cPath).getLen();
 
-            FileSplit fileSplit = new FileSplit(cPath, 0, len, conf);
-            SequenceFileRecordReader<RenderedTileKey, RenderedTile> reader =
-                    new SequenceFileRecordReader<RenderedTileKey, RenderedTile>(conf, fileSplit);
+            FileSplit fileSplit = new FileSplit(cPath, 0, len, );
+            SequenceFileRecordReader<RenderedTileKey, RenderedTile> reader = new SequenceFileRecordReader<>();
+            reader.initialize(fileSplit, );
 
-            RenderedTileKey k = new RenderedTileKey();
-            RenderedTile tile = new RenderedTile();
+            RenderedTileKey k;
+            RenderedTile tile;
 
-            while (reader.getPos() < len) {
-                reader.next(k, tile);
-                logger.info("Inflating tile (" + k.tileIdX + "," + k.tileIdY + ") z:" + k.zoomLevel);
-                File f = new File("tiles/" + k.zoomLevel + "/" + k.tileIdX
-                        + "_" + k.tileIdY + "_" + k.zoomLevel + ".png");
-                FileOutputStream fos = new FileOutputStream(f);
-                fos.write(tile.tileData);
-                fos.close();
+            try {
+                while (reader.nextKeyValue()) {
+                    k = reader.getCurrentKey();
+                    tile = reader.getCurrentValue();
+                    logger.info("Inflating tile (" + k.tileIdX + "," + k.tileIdY + ") z:" + k.zoomLevel);
+                    File f = new File("tiles/" + k.zoomLevel + "/" + k.tileIdX
+                            + "_" + k.tileIdY + "_" + k.zoomLevel + ".png");
+                    FileOutputStream fos = new FileOutputStream(f);
+                    fos.write(tile.tileData);
+                    fos.close();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
         logger.info("Finished inflating tiles.");

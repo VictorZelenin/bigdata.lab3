@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reporter;
+import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
 import ua.kpi.cad.lab3.core.protocol.RenderedTile;
 import ua.kpi.cad.lab3.core.protocol.RenderedTileKey;
@@ -120,8 +121,9 @@ public abstract class TileSetDivider {
      * the rendering process can be displayed.
      */
     public void renderTileSet(TileRenderer renderer, int tileSetId,
-                              OutputCollector<RenderedTileKey, RenderedTile> output, Reporter reporter)
-            throws IOException {
+                              Mapper.Context context)
+            throws IOException, InterruptedException {
+        ;
         for (int i = 0; i < getNumTilesPerSide(); i++) {
             for (int j = 0; j < getNumTilesPerSide(); j++) {
                 if (this.tileSetIds[i][j] == tileSetId) {
@@ -136,8 +138,8 @@ public abstract class TileSetDivider {
                     RenderedTile t = new RenderedTile();
                     renderer.setTile(this, new TileID(i, j));
                     t.tileData = renderer.renderTile();
-                    output.collect(k, t);
-                    reporter.incrCounter("Rendered Tiles", "Tile Set " + tileSetId, 1);
+                    context.write(k, t);
+                    context.getCounter("Rendered Tiles", "Tile Set " + tileSetId).increment(1);
                 }
             }
         }
