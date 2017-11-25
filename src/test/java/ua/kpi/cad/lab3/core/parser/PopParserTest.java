@@ -2,8 +2,7 @@ package ua.kpi.cad.lab3.core.parser;
 
 import org.junit.Assert;
 import ua.kpi.cad.lab3.core.GeoConstants;
-import ua.kpi.cad.lab3.core.parser.GeoRecordParser;
-import ua.kpi.cad.lab3.core.parser.PopParser;
+import ua.kpi.cad.lab3.core.exception.RecordFormatException;
 import ua.kpi.cad.lab3.core.protocol.GeoRecord;
 
 import static org.junit.Assert.assertEquals;
@@ -11,7 +10,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public class PopParserTest {
-    GeoRecordParser parser;
+    private GeoRecordParser parser;
 
     public void setUp() {
         parser = new PopParser();
@@ -23,11 +22,11 @@ public class PopParserTest {
         GeoRecord result = parser.parse(entry);
 
         assertNotNull(result);
-        Assert.assertEquals(result.recordType, GeoConstants.RECORD_TYPE_POP);
-        assertNotNull(result.rp);
-        assertEquals(result.rp.name, "Aberdeen city");
-        assertEquals(result.rp.population, 16150);
-        assertEquals(result.rp.state, "WA");
+        Assert.assertEquals(result.getRecordType(), GeoConstants.RECORD_TYPE_POP);
+        assertNotNull(result.getPopRecord());
+        assertEquals(result.getPopRecord().name, "Aberdeen city");
+        assertEquals(result.getPopRecord().population, 16150);
+        assertEquals(result.getPopRecord().state, "WA");
     }
 
     public void testParseValidNoQuotes() throws Exception {
@@ -36,11 +35,11 @@ public class PopParserTest {
         GeoRecord result = parser.parse(entry);
 
         assertNotNull(result);
-        assertEquals(result.recordType, GeoConstants.RECORD_TYPE_POP);
-        assertNotNull(result.rp);
-        assertEquals(result.rp.name, "Wilkeson town");
-        assertEquals(result.rp.population, 408);
-        assertEquals(result.rp.state, "WA");
+        assertEquals(result.getRecordType(), GeoConstants.RECORD_TYPE_POP);
+        assertNotNull(result.getPopRecord());
+        assertEquals(result.getPopRecord().name, "Wilkeson town");
+        assertEquals(result.getPopRecord().population, 408);
+        assertEquals(result.getPopRecord().state, "WA");
     }
 
     public void testParseInvalid() {
@@ -48,7 +47,7 @@ public class PopParserTest {
 
         try {
             parser.parse(invalidEntry);
-        } catch (GeoRecordParser.RecordFormatException exn) {
+        } catch (RecordFormatException exn) {
             assertEquals(exn.getRecordType(), GeoConstants.RECORD_TYPE_POP);
             return;
         }

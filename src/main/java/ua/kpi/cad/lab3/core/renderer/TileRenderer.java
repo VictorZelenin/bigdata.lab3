@@ -65,14 +65,14 @@ public abstract class TileRenderer {
      * in the tile set. The TileSetDivider class implements the latter functionality.
      */
     public void addRecord(GeoRecord record) {
-        if (record.recordType.startsWith(GeoConstants.RECORD_TYPE_1)) {
-            rt1.add(record.rt1);
-        } else if (record.recordType.startsWith(GeoConstants.RECORD_TYPE_2)) {
-            rt2.add(record.rt2);
-        } else if (record.recordType.startsWith(GeoConstants.RECORD_TYPE_BGN)) {
-            rbgn.add(record.rbgn);
-        } else if (record.recordType.startsWith(GeoConstants.RECORD_TYPE_POP)) {
-            rp.add(record.rp);
+        if (record.getRecordType().startsWith(GeoConstants.RECORD_TYPE_1)) {
+            rt1.add(record.getRecordType1());
+        } else if (record.getRecordType().startsWith(GeoConstants.RECORD_TYPE_2)) {
+            rt2.add(record.getRecordType2());
+        } else if (record.getRecordType().startsWith(GeoConstants.RECORD_TYPE_BGN)) {
+            rbgn.add(record.getBgnRecord());
+        } else if (record.getRecordType().startsWith(GeoConstants.RECORD_TYPE_POP)) {
+            rp.add(record.getPopRecord());
         } else {
             // no-op for now
         }

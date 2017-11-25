@@ -1,6 +1,7 @@
 package ua.kpi.cad.lab3.core.parser;
 
 
+import ua.kpi.cad.lab3.core.exception.RecordFormatException;
 import ua.kpi.cad.lab3.core.protocol.GeoRecordKey;
 import ua.kpi.cad.lab3.core.protocol.GeoRecord;
 
@@ -13,6 +14,8 @@ import ua.kpi.cad.lab3.core.protocol.GeoRecord;
  */
 public abstract class GeoRecordParser {
 
+    private static final int QUANTITY_OF_DIGITS_IN_COORDS = 6;
+
     /**
      * Construct the associated key to a given record
      *
@@ -21,7 +24,7 @@ public abstract class GeoRecordParser {
      */
     public GeoRecordKey getKey(GeoRecord record) {
         GeoRecordKey key = new GeoRecordKey();
-        key.recordType = record.recordType;
+        key.recordType = record.getRecordType();
         return key;
     }
 
@@ -33,35 +36,6 @@ public abstract class GeoRecordParser {
      * @return
      */
     public abstract GeoRecord parse(String entry) throws RecordFormatException;
-
-    /**
-     * Exception to be thrown when the record attempted to be parsed
-     * is malformed
-     */
-    @SuppressWarnings("serial")
-    public static class RecordFormatException extends Exception {
-        private String entry;
-        private String recordType;
-
-        public RecordFormatException(String entry, String recordType) {
-            this.entry = entry;
-            this.recordType = recordType;
-        }
-
-        public RecordFormatException(String entry, String recordType, Exception innerException) {
-            super(innerException);
-            this.entry = entry;
-            this.recordType = recordType;
-        }
-
-        public String getEntry() {
-            return entry;
-        }
-
-        public String getRecordType() {
-            return recordType;
-        }
-    }
 
     protected static long tryParseLong(String toParse, long defaultValue) {
         try {
@@ -79,4 +53,19 @@ public abstract class GeoRecordParser {
         }
     }
 
+    /**
+     * All coordinates are expressed as a signed integer with six
+     * decimal places of precision implied (see the section, Positional Accuracy,
+     * in Chapter 5).
+     */
+    protected double parseGeoCoordinateField(String rawValue) {
+        try {
+            String mainPart = rawValue.substring(0, rawValue.length() - QUANTITY_OF_DIGITS_IN_COORDS);
+            String digits = rawValue.substring(rawValue.length() - QUANTITY_OF_DIGITS_IN_COORDS);
+
+            return Double.parseDouble(String.format("%s.%s", mainPart, digits));
+        } catch (NumberFormatException exn) {
+            throw new IllegalArgumentException("Wrong coordinate.");
+        }
+    }
 }
