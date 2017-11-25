@@ -1,4 +1,4 @@
-package ua.kpi.cad.lab3;
+package ua.kpi.cad.lab3.core.divider;
 
 import junit.framework.TestCase;
 

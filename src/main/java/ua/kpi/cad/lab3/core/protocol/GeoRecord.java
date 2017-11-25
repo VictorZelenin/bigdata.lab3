@@ -1,4 +1,4 @@
-package ua.kpi.cad.lab3.protocol;
+package ua.kpi.cad.lab3.core.protocol;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -24,7 +24,6 @@ public class GeoRecord implements WritableComparable<GeoRecord> {
 
     // the possible record types that can be wrapped by this
     // GeoRecord
-
     public TigerRecordType1 rt1 = null;
     public TigerRecordType2 rt2 = null;
     public BgnRecord rbgn = null;

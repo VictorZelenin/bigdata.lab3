@@ -1,4 +1,4 @@
-package ua.kpi.cad.lab3;
+package ua.kpi.cad.lab3.core;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,8 +10,9 @@ import org.apache.hadoop.mapred.FileSplit;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.SequenceFileRecordReader;
 import org.apache.log4j.Logger;
-import ua.kpi.cad.lab3.protocol.RenderedTile;
-import ua.kpi.cad.lab3.protocol.RenderedTileKey;
+import ua.kpi.cad.lab3.core.divider.TileSetDivider;
+import ua.kpi.cad.lab3.core.protocol.RenderedTile;
+import ua.kpi.cad.lab3.core.protocol.RenderedTileKey;
 
 /**
  * This is a tool to extract the rendered tiles written to the DFS
@@ -20,14 +21,15 @@ import ua.kpi.cad.lab3.protocol.RenderedTileKey;
  * @author Slava Chernyak
  */
 public class TileExtractor {
-    Logger logger = Logger.getLogger(this.getClass().toString());
+    private final Logger logger = Logger.getLogger(this.getClass().toString());
 
     /**
      * Extracts the tiles from a result of a render job.
-     * @param path The path to which the result of the mapreduce
-     * 		was stored
-     * @param conf The job conf associated with the render
-     * 		mapreduce
+     *
+     * @param path     The path to which the result of the mapreduce
+     *                 was stored
+     * @param conf     The job conf associated with the render
+     *                 mapreduce
      * @param numTasks The number of render tasks (number of reducers)
      * @throws IOException
      */
@@ -35,10 +37,9 @@ public class TileExtractor {
     public void ExtractTiles(String path, JobConf conf, int numTasks)
             throws IOException {
         // create the tile directory structure
-        for (int j = TileSetDivider.HIGHEST_ZOOMLEVEL;
-             j <= TileSetDivider.LOWEST_ZOOMLEVEL; j++) {
-            File tileDir = new File("tiles/"+ j + "/");
-            if (! tileDir.exists()) {
+        for (int j = TileSetDivider.HIGHEST_ZOOMLEVEL; j <= TileSetDivider.LOWEST_ZOOMLEVEL; j++) {
+            File tileDir = new File("tiles/" + j + "/");
+            if (!tileDir.exists()) {
                 tileDir.mkdirs();
             }
         }
@@ -52,12 +53,11 @@ public class TileExtractor {
             String filename = ("0000" + i);
             filename = filename.substring(filename.length() - 5);
             filename = "part-" + filename;
-            filename = (path.endsWith("/")) ? path + filename : path + "/"
-                    + filename;
+            filename = (path.endsWith("/")) ? path + filename : path + "/" + filename;
             logger.info("Starting inflate from result file " + filename);
 
             Path cPath = new Path(filename);
-            if (! fileSystem.exists(cPath)) {
+            if (!fileSystem.exists(cPath)) {
                 logger.warn(cPath.toString() + " does not exit!");
                 continue;
             }
@@ -73,8 +73,7 @@ public class TileExtractor {
 
             while (reader.getPos() < len) {
                 reader.next(k, tile);
-                logger.info("Inflating tile (" + k.tileIdX + ","
-                        + k.tileIdY + ") z:" + k.zoomLevel);
+                logger.info("Inflating tile (" + k.tileIdX + "," + k.tileIdY + ") z:" + k.zoomLevel);
                 File f = new File("tiles/" + k.zoomLevel + "/" + k.tileIdX
                         + "_" + k.tileIdY + "_" + k.zoomLevel + ".png");
                 FileOutputStream fos = new FileOutputStream(f);

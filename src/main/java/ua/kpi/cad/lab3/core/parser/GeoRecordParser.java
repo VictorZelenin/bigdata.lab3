@@ -1,7 +1,8 @@
-package ua.kpi.cad.lab3;
+package ua.kpi.cad.lab3.core.parser;
 
-import ua.kpi.cad.lab3.protocol.GeoRecord;
-import ua.kpi.cad.lab3.protocol.GeoRecordKey;
+
+import ua.kpi.cad.lab3.core.protocol.GeoRecordKey;
+import ua.kpi.cad.lab3.core.protocol.GeoRecord;
 
 /**
  * The purpose of this abstract class is to specify how a parser

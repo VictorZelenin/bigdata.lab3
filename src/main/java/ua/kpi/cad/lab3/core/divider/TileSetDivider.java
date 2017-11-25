@@ -1,12 +1,13 @@
-package ua.kpi.cad.lab3;
+package ua.kpi.cad.lab3.core.divider;
 
 import java.io.IOException;
 
 import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reporter;
 import org.apache.log4j.Logger;
-import ua.kpi.cad.lab3.protocol.RenderedTile;
-import ua.kpi.cad.lab3.protocol.RenderedTileKey;
+import ua.kpi.cad.lab3.core.protocol.RenderedTile;
+import ua.kpi.cad.lab3.core.protocol.RenderedTileKey;
+import ua.kpi.cad.lab3.core.renderer.TileRenderer;
 
 /**
  * The purpose of this class is to form a base for classes that divide the
@@ -15,7 +16,7 @@ import ua.kpi.cad.lab3.protocol.RenderedTileKey;
  * @author Slava Chernyak
  */
 public abstract class TileSetDivider {
-    Logger logger = Logger.getLogger(this.getClass().getCanonicalName());
+    private final Logger logger = Logger.getLogger(this.getClass().getCanonicalName());
 
 	/*
      * Here are the approximate zoom levels to linear distance relations for

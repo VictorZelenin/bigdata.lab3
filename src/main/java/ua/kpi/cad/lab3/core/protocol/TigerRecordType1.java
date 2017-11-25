@@ -1,4 +1,4 @@
-package ua.kpi.cad.lab3.protocol;
+package ua.kpi.cad.lab3.core.protocol;
 
 import java.io.*;
 
@@ -14,10 +14,8 @@ public class TigerRecordType1 implements WritableComparable<TigerRecordType1> {
         throw new RuntimeException("Not Implemented");
     }
 
-
     // The fields below are all from the TIGER/Line record type 1 with
     // the same names as below
-
     public int lineId;
     public String prefix;
     public String name;

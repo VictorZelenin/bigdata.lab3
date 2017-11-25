@@ -1,11 +1,14 @@
-package ua.kpi.cad.lab3;
+package ua.kpi.cad.lab3.core.renderer;
 
-import ua.kpi.cad.lab3.protocol.*;
+import ua.kpi.cad.lab3.core.GeoConstants;
+import ua.kpi.cad.lab3.core.protocol.*;
+import ua.kpi.cad.lab3.core.divider.TileSetDivider;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * This abstract class forms a base for the tile renderer class
@@ -25,7 +28,7 @@ public abstract class TileRenderer {
 
     protected final BufferedImage image;
 
-    protected List<TigerRecordType1> rt1 = new ArrayList<TigerRecordType1>();
+    protected List<TigerRecordType1> rt1 = new ArrayList<>();
     protected List<TigerRecordType2> rt2 = new ArrayList<TigerRecordType2>();
     protected List<BgnRecord> rbgn = new ArrayList<BgnRecord>();
     protected List<PopRecord> rp = new ArrayList<PopRecord>();
@@ -43,8 +46,8 @@ public abstract class TileRenderer {
      * respect to the tile id's of the specified divider.
      */
     public void setTile(TileSetDivider divider, TileSetDivider.TileID tileId) {
-        this.minLat = divider.getLatLong(tileId).Lat;
-        this.minLong = divider.getLatLong(tileId).Long;
+        this.minLat = divider.getLatLong(tileId).getLat();
+        this.minLong = divider.getLatLong(tileId).getLong();
         this.zoomLevel = divider.getZoomLevel();
 
         scaleFactor = divider.getTileSize() / (double) TILE_SZ;

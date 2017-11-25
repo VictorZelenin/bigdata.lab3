@@ -1,7 +1,10 @@
-package ua.kpi.cad.lab3;
+package ua.kpi.cad.lab3.core.parser;
 
-import ua.kpi.cad.lab3.GeoRecordParser;
-import ua.kpi.cad.lab3.protocol.GeoRecord;
+import org.junit.Assert;
+import ua.kpi.cad.lab3.core.GeoConstants;
+import ua.kpi.cad.lab3.core.parser.GeoRecordParser;
+import ua.kpi.cad.lab3.core.parser.PopParser;
+import ua.kpi.cad.lab3.core.protocol.GeoRecord;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -20,7 +23,7 @@ public class PopParserTest {
         GeoRecord result = parser.parse(entry);
 
         assertNotNull(result);
-        assertEquals(result.recordType, GeoConstants.RECORD_TYPE_POP);
+        Assert.assertEquals(result.recordType, GeoConstants.RECORD_TYPE_POP);
         assertNotNull(result.rp);
         assertEquals(result.rp.name, "Aberdeen city");
         assertEquals(result.rp.population, 16150);

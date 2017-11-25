@@ -1,4 +1,4 @@
-package ua.kpi.cad.lab3;
+package ua.kpi.cad.lab3.core;
 
 /**
  * This class has all sorts of useful constants predefined for you.

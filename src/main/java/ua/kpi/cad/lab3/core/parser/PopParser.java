@@ -1,8 +1,8 @@
-package ua.kpi.cad.lab3;
+package ua.kpi.cad.lab3.core.parser;
 
-import ua.kpi.cad.lab3.GeoRecordParser;
-import ua.kpi.cad.lab3.protocol.GeoRecord;
-import ua.kpi.cad.lab3.protocol.PopRecord;
+import ua.kpi.cad.lab3.core.GeoConstants;
+import ua.kpi.cad.lab3.core.protocol.PopRecord;
+import ua.kpi.cad.lab3.core.protocol.GeoRecord;
 
 /**
  * This class parses data out of the population data record into

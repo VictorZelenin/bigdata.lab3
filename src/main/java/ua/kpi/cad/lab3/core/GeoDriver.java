@@ -1,4 +1,5 @@
-package ua.kpi.cad.lab3;
+package ua.kpi.cad.lab3.core;
+
 import java.io.IOException;
 
 import org.apache.hadoop.fs.Path;
@@ -12,10 +13,11 @@ import org.apache.hadoop.mapred.SequenceFileOutputFormat;
 import org.apache.hadoop.mapred.TextInputFormat;
 import org.apache.hadoop.mapred.TextOutputFormat;
 import org.apache.log4j.Logger;
-import ua.kpi.cad.lab3.protocol.GeoRecord;
-import ua.kpi.cad.lab3.protocol.GeoRecordKey;
-import ua.kpi.cad.lab3.protocol.RenderedTile;
-import ua.kpi.cad.lab3.protocol.RenderedTileKey;
+import ua.kpi.cad.lab3.core.divider.TileSetDivider;
+import ua.kpi.cad.lab3.core.protocol.GeoRecordKey;
+import ua.kpi.cad.lab3.core.protocol.RenderedTile;
+import ua.kpi.cad.lab3.core.protocol.RenderedTileKey;
+import ua.kpi.cad.lab3.core.protocol.GeoRecord;
 
 /**
  * This class sets up the mapreduce pipeline that we use to
@@ -30,41 +32,41 @@ import ua.kpi.cad.lab3.protocol.RenderedTileKey;
  * your own code.
  *
  * @author Slava Chernyak
- *
  */
 public class GeoDriver {
-    // cmdline arguments
-    public static final String ARG_INPUT_PATH_TIGER = "-t";
-    public static final String ARG_INPUT_PATH_BGN = "-b";
-    public static final String ARG_INPUT_PATH_POP = "-p";
-    public static final String ARG_ZOOMLEVEL = "-z";
-    public static final String ARG_EXTRACT_TO_LOCAL_LONG = "--extract_to_local";
+    private static final Logger logger = Logger.getLogger(GeoDriver.class.toString());
 
+    // cmdline arguments
+    private static final String ARG_INPUT_PATH_TIGER = "-t";
+    private static final String ARG_INPUT_PATH_BGN = "-b";
+    private static final String ARG_INPUT_PATH_POP = "-p";
+    private static final String ARG_ZOOMLEVEL = "-z";
+    private static final String ARG_EXTRACT_TO_LOCAL_LONG = "--extract_to_local";
 
     // mapreduce config constants
     public static final String MAXIMUM_SIMOULTANEOUS_REDUCES_PER_HOST_KEY =
             "mapred.tasktracker.reduce.tasks.maximum";
-    public static final String TILE_SET_DIVIDER_TYPE_KEY =
+    private static final String TILE_SET_DIVIDER_TYPE_KEY =
             "edu.washington.tigermap.divider";
-    public static final String TILE_RENDERER_TYPE_KEY =
+    private static final String TILE_RENDERER_TYPE_KEY =
             "edu.washington.tigermap.renderer";
-    public static final String TILE_SET_MIN_LAT_KEY =
+    private static final String TILE_SET_MIN_LAT_KEY =
             "edu.washington.tigermap.lat.min";
-    public static final String TILE_SET_MAX_LAT_KEY =
+    private static final String TILE_SET_MAX_LAT_KEY =
             "edu.washington.tigermap.lat.max";
-    public static final String TILE_SET_MIN_LONG_KEY =
+    private static final String TILE_SET_MIN_LONG_KEY =
             "edu.washington.tigermap.long.min";
-    public static final String TILE_SET_MAX_LONG_KEY =
+    private static final String TILE_SET_MAX_LONG_KEY =
             "edu.washington.tigermap.long.max";
-    public static final String TILE_SET_ZOOMLEVEL_KEY =
+    private static final String TILE_SET_ZOOMLEVEL_KEY =
             "edu.washington.tigermap.zoomlevel";
-    public static final String NUM_RENDER_TASKS_KEY =
+    private static final String NUM_RENDER_TASKS_KEY =
             "edu.washington.cse490h.geo.numrendertasks";
 
 
-    public static final String TILE_SET_DIVIDER_SIMPLE =
+    private static final String TILE_SET_DIVIDER_SIMPLE =
             "SimpleDivider.class";
-    public static final String TILE_RENDERER_FAKE =
+    private static final String TILE_RENDERER_FAKE =
             "FakeRenderer.class";
 
     /**
@@ -72,8 +74,6 @@ public class GeoDriver {
      * geographic data to map tiles.
      */
     public static void main(String[] args) {
-        Logger logger = Logger.getLogger(new GeoDriver().getClass().toString());
-
         // configure the input directories for the raw data
 
         String inputTiger = parseStringArg(args, ARG_INPUT_PATH_TIGER, null);
@@ -100,7 +100,7 @@ public class GeoDriver {
         int zoomLevel = Integer.parseInt(parseStringArg(args, ARG_ZOOMLEVEL, null));
         if (zoomLevel > TileSetDivider.LOWEST_ZOOMLEVEL
                 || zoomLevel < TileSetDivider.HIGHEST_ZOOMLEVEL) {
-            logger.error("Zoom level is out of range! Must be from "  +
+            logger.error("Zoom level is out of range! Must be from " +
                     TileSetDivider.HIGHEST_ZOOMLEVEL + " to " +
                     TileSetDivider.LOWEST_ZOOMLEVEL);
             printUsage();
@@ -110,13 +110,13 @@ public class GeoDriver {
         boolean extract = parseBooleanArg(args, null, ARG_EXTRACT_TO_LOCAL_LONG);
 
         // filter data from all sources
-        filterTigerData(inputTiger); 	// TIGER/Line
-        filterBgnData(inputBgn); 		// BGN
-        filterPopData(inputPop);		// Population records
+        filterTigerData(inputTiger);    // TIGER/Line
+        filterBgnData(inputBgn);        // BGN
+        filterPopData(inputPop);        // Population records
 
         // Perform joins on data types
-        joinBgnPopData();				// BGN into Population
-        joinTigerLinePoly();			// Line (Type 1) into Polygonal (Type 2)
+        joinBgnPopData();                // BGN into Population
+        joinTigerLinePoly();            // Line (Type 1) into Polygonal (Type 2)
 
         // build geocode index
         buildGeocodeIndex();
@@ -131,7 +131,7 @@ public class GeoDriver {
 
     private static String parseStringArg(String[] args, String argName, String argLongName) {
         for (int i = 0; i < args.length - 1; i++) {
-            if (args[i].equals(argName) || args[i].equals(argLongName)) return args[i+1];
+            if (args[i].equals(argName) || args[i].equals(argLongName)) return args[i + 1];
         }
         return null;
     }
@@ -150,10 +150,10 @@ public class GeoDriver {
     /**
      * This pass should read in the BGN data records and
      * filter out the fields that we want.
-     *
+     * <p>
      * You will have to implement a new parser that subclasses
      * the GeoRecordParser to parse BGN records.
-     *
+     * <p>
      * See protocol.BgnRecord for a list of the fields that
      * should be populated.
      */
@@ -190,10 +190,10 @@ public class GeoDriver {
     /**
      * This pass should read in the TIGER/Line data records and
      * filter out the fields that we want.
-     *
+     * <p>
      * You will have to implement a new parser that subclasses
      * the GeoRecordParser to parse TIGER/Line records.
-     *
+     * <p>
      * See protocol.TigerRecordType1 and protocol.TigerRecordType2
      * for a list of the fields that should be populated.
      */
@@ -230,10 +230,10 @@ public class GeoDriver {
     /**
      * This pass should read in the city and town population data
      * records and filter out the fields that we want.
-     *
+     * <p>
      * A parser (PopParser) is already implemented for this data
      * as an example.
-     *
+     * <p>
      * See protocol.PopRecord for a list of fields that should be
      * populated by this pass.
      */
@@ -371,7 +371,7 @@ public class GeoDriver {
      * to images. We pull data from the directories in the DFS where we
      * put data after pre-processing and joining, and output rendered tiles
      * back to the DFS into a SequenceFile.
-     *
+     * <p>
      * This method also calls the  extractor class which opens the generated
      * SequenceFiles on the DFS,  extracts the images, and creates them as PNG
      * files on the machine on which this program is being run.
@@ -380,13 +380,13 @@ public class GeoDriver {
             double minLat, double minLong, double maxLat,
             double maxLong, int zoomLevel, boolean extract) {
         // we scale the number of rendering tasks depending on the zoomlevel and
-        // the range we are mapping over. The estimate is based arround wanting to
+        // the range we are mapping over. The estimate is based around wanting to
         // have ~300 render tasks for the northwestern quadrant of the US at zoomlevel 6
         double delta = (maxLat - minLat) > (maxLong - minLong) ?
                 maxLat - minLat : maxLong - minLong;
-        int areaScaleFactor = (int)(delta * delta);
+        int areaScaleFactor = (int) (delta * delta);
         int constantScaleFactor = 225;
-        int numRenderTasks = (int)Math.ceil(((double)areaScaleFactor / (double)constantScaleFactor)
+        int numRenderTasks = (int) Math.ceil(((double) areaScaleFactor / (double) constantScaleFactor)
                 * Math.pow(4, 10 - zoomLevel));
 
         JobConf conf = new JobConf(GeoDriver.class);
@@ -429,7 +429,7 @@ public class GeoDriver {
             e.printStackTrace();
         }
 
-        if (extract){
+        if (extract) {
             try {
                 // extract tiles to the local disk
                 TileExtractor extractor = new TileExtractor();

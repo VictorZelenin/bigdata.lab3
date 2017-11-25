@@ -1,9 +1,9 @@
-package ua.kpi.cad.lab3;
+package ua.kpi.cad.lab3.core.renderer;
 
 import java.io.File;
 import java.io.FileOutputStream;
 
-public class FakeRendererTester {
+public class  FakeRendererTester {
 
     /**
      * Run the fake renderer by itself and save the

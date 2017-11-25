@@ -1,6 +1,6 @@
-package ua.kpi.cad.lab3;
+package ua.kpi.cad.lab3.core.divider;
 
-import ua.kpi.cad.lab3.TileSetDivider;
+import ua.kpi.cad.lab3.core.divider.TileSetDivider;
 
 import static org.junit.Assert.assertEquals;
 

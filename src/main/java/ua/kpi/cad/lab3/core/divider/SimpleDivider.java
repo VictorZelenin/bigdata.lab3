@@ -1,4 +1,4 @@
-package ua.kpi.cad.lab3;
+package ua.kpi.cad.lab3.core.divider;
 
 /**
  * This is a simple Tile Set Divider that splits the Mappable Range into

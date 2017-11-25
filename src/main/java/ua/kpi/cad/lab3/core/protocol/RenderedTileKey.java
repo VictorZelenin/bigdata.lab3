@@ -1,4 +1,4 @@
-package ua.kpi.cad.lab3.protocol;
+package ua.kpi.cad.lab3.core.protocol;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;

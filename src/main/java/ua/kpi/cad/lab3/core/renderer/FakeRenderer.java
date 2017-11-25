@@ -1,4 +1,4 @@
-package ua.kpi.cad.lab3;
+package ua.kpi.cad.lab3.core.renderer;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
