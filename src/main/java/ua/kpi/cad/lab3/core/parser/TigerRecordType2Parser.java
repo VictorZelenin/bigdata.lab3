@@ -1,5 +1,6 @@
 package ua.kpi.cad.lab3.core.parser;
 
+import ua.kpi.cad.lab3.core.exception.RecordFormatException;
 import ua.kpi.cad.lab3.core.protocol.GeoRecord;
 
 /**

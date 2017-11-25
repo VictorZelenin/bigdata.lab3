@@ -1,6 +1,7 @@
 package ua.kpi.cad.lab3.core.parser;
 
 import ua.kpi.cad.lab3.core.GeoConstants;
+import ua.kpi.cad.lab3.core.exception.RecordFormatException;
 import ua.kpi.cad.lab3.core.protocol.PopRecord;
 import ua.kpi.cad.lab3.core.protocol.GeoRecord;
 
@@ -12,7 +13,7 @@ import ua.kpi.cad.lab3.core.protocol.GeoRecord;
  * Population data comes in a CSV file format, an entry would look
  * something like this:
  *
- * 	 53,Seattle City,"543,238",   ...
+ * 53,Seattle City,"543,238",   ...
  *
  * This would refer to Washington state (53 is the code for Washington
  * - see the GeoConstants class), the city of Seattle, and the population
@@ -30,7 +31,7 @@ public class PopParser extends GeoRecordParser {
         //    remove the quotes around them.
         boolean inQuotes = false;
         StringBuilder sb = new StringBuilder();
-        for (int i = 0 ; i < line.length() -1; i++) {
+        for (int i = 0; i < line.length() - 1; i++) {
             if (line.charAt(i) == '"') {
                 inQuotes ^= true;
                 continue;
@@ -38,7 +39,7 @@ public class PopParser extends GeoRecordParser {
             if (inQuotes && line.charAt(i) == ',') {
                 continue;
             }
-            sb.append(line.charAt(i) + "");
+            sb.append(line.charAt(i)).append("");
         }
 
         String[] entries = sb.toString().trim().split(",");
@@ -48,7 +49,7 @@ public class PopParser extends GeoRecordParser {
             // from this record.
             PopRecord rp = new PopRecord();
             // The state is the first field.
-            rp.state = GeoConstants.FIPS_STATE_CODE_MAP[tryParseInt(entries[0],0)];
+            rp.state = GeoConstants.FIPS_STATE_CODE_MAP[tryParseInt(entries[0], 0)];
             // The city or town name is the second field.
             rp.name = entries[1];
             // The population is the third field.
@@ -71,5 +72,4 @@ public class PopParser extends GeoRecordParser {
             throw new RecordFormatException(line, GeoConstants.RECORD_TYPE_POP, exn);
         }
     }
-
 }

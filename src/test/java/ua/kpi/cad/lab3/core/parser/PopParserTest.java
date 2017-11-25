@@ -2,8 +2,7 @@ package ua.kpi.cad.lab3.core.parser;
 
 import org.junit.Assert;
 import ua.kpi.cad.lab3.core.GeoConstants;
-import ua.kpi.cad.lab3.core.parser.GeoRecordParser;
-import ua.kpi.cad.lab3.core.parser.PopParser;
+import ua.kpi.cad.lab3.core.exception.RecordFormatException;
 import ua.kpi.cad.lab3.core.protocol.GeoRecord;
 
 import static org.junit.Assert.assertEquals;
@@ -11,7 +10,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public class PopParserTest {
-    GeoRecordParser parser;
+    private GeoRecordParser parser;
 
     public void setUp() {
         parser = new PopParser();
@@ -48,7 +47,7 @@ public class PopParserTest {
 
         try {
             parser.parse(invalidEntry);
-        } catch (GeoRecordParser.RecordFormatException exn) {
+        } catch (RecordFormatException exn) {
             assertEquals(exn.getRecordType(), GeoConstants.RECORD_TYPE_POP);
             return;
         }

@@ -1,6 +1,7 @@
 package ua.kpi.cad.lab3.core.parser;
 
 
+import ua.kpi.cad.lab3.core.exception.RecordFormatException;
 import ua.kpi.cad.lab3.core.protocol.GeoRecordKey;
 import ua.kpi.cad.lab3.core.protocol.GeoRecord;
 
@@ -33,35 +34,6 @@ public abstract class GeoRecordParser {
      * @return
      */
     public abstract GeoRecord parse(String entry) throws RecordFormatException;
-
-    /**
-     * Exception to be thrown when the record attempted to be parsed
-     * is malformed
-     */
-    @SuppressWarnings("serial")
-    public static class RecordFormatException extends Exception {
-        private String entry;
-        private String recordType;
-
-        public RecordFormatException(String entry, String recordType) {
-            this.entry = entry;
-            this.recordType = recordType;
-        }
-
-        public RecordFormatException(String entry, String recordType, Exception innerException) {
-            super(innerException);
-            this.entry = entry;
-            this.recordType = recordType;
-        }
-
-        public String getEntry() {
-            return entry;
-        }
-
-        public String getRecordType() {
-            return recordType;
-        }
-    }
 
     protected static long tryParseLong(String toParse, long defaultValue) {
         try {
