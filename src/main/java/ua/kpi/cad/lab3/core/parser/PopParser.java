@@ -58,11 +58,11 @@ public class PopParser extends GeoRecordParser {
             // We wrap this object in a GeoRecord so that all extracted
             // data looks homogeneous.
             GeoRecord record = new GeoRecord();
-            record.rp = rp;
+            record.setPopRecord(rp);
             // we set the record type as the Population record type
             // so we can identify what sort of record is wrapped by
             // the GeoRecord
-            record.recordType = GeoConstants.RECORD_TYPE_POP;
+            record.setRecordType(GeoConstants.RECORD_TYPE_POP);
             return record;
 
         } catch (Exception exn) {

@@ -22,11 +22,11 @@ public class PopParserTest {
         GeoRecord result = parser.parse(entry);
 
         assertNotNull(result);
-        Assert.assertEquals(result.recordType, GeoConstants.RECORD_TYPE_POP);
-        assertNotNull(result.rp);
-        assertEquals(result.rp.name, "Aberdeen city");
-        assertEquals(result.rp.population, 16150);
-        assertEquals(result.rp.state, "WA");
+        Assert.assertEquals(result.getRecordType(), GeoConstants.RECORD_TYPE_POP);
+        assertNotNull(result.getPopRecord());
+        assertEquals(result.getPopRecord().name, "Aberdeen city");
+        assertEquals(result.getPopRecord().population, 16150);
+        assertEquals(result.getPopRecord().state, "WA");
     }
 
     public void testParseValidNoQuotes() throws Exception {
@@ -35,11 +35,11 @@ public class PopParserTest {
         GeoRecord result = parser.parse(entry);
 
         assertNotNull(result);
-        assertEquals(result.recordType, GeoConstants.RECORD_TYPE_POP);
-        assertNotNull(result.rp);
-        assertEquals(result.rp.name, "Wilkeson town");
-        assertEquals(result.rp.population, 408);
-        assertEquals(result.rp.state, "WA");
+        assertEquals(result.getRecordType(), GeoConstants.RECORD_TYPE_POP);
+        assertNotNull(result.getPopRecord());
+        assertEquals(result.getPopRecord().name, "Wilkeson town");
+        assertEquals(result.getPopRecord().population, 408);
+        assertEquals(result.getPopRecord().state, "WA");
     }
 
     public void testParseInvalid() {
