@@ -24,8 +24,7 @@ public class FakeRenderer extends TileRenderer {
     @Override
     public byte[] renderTile() throws IOException {
         render(image.createGraphics());
-        javax.imageio.ImageWriter writer = javax.imageio.ImageIO
-                .getImageWritersBySuffix("png").next();
+        javax.imageio.ImageWriter writer = javax.imageio.ImageIO.getImageWritersBySuffix("png").next();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageOutputStream ios = ImageIO.createImageOutputStream(baos);
@@ -36,8 +35,7 @@ public class FakeRenderer extends TileRenderer {
 
     public void render(Graphics2D g) {
         // turn on anti-aliasing
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // clear the background to white
         g.setColor(Color.WHITE);

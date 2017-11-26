@@ -1,4 +1,4 @@
-package ua.kpi.cad.lab3.mapred;
+package ua.kpi.cad.lab3.mapred.mappers;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -58,7 +58,7 @@ public class TigerRecordsFilteringMapper extends Mapper<Object, Text, GeoRecordK
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
 
         FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        FileOutputFormat.setOutputPath(job, new Path("filtered"));
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }

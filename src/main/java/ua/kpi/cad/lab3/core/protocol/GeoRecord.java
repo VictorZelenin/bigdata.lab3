@@ -24,7 +24,7 @@ public class GeoRecord implements WritableComparable<GeoRecord> {
      * The marker field that determines
      * what record type is wrapped by this GeoRecord.
      */
-    private String recordType = null;
+    private String recordType;
 
     // the possible record types that can be wrapped by this
     // GeoRecord

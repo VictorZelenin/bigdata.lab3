@@ -7,8 +7,7 @@ package ua.kpi.cad.lab3.core.divider;
  */
 public class SimpleDivider extends TileSetDivider {
 
-    public SimpleDivider(double minLat, double minLong, double maxLat,
-                         double maxLong, int zoomLevel) {
+    public SimpleDivider(double minLat, double minLong, double maxLat, double maxLong, int zoomLevel) {
         super(minLat, minLong, maxLat, maxLong, zoomLevel);
     }
 

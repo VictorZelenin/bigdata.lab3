@@ -38,12 +38,12 @@ public class TigerRecordType1 implements WritableComparable<TigerRecordType1> {
 
     @Override
     public void readFields(DataInput d) throws IOException {
-        throw new NotImplementedException("This feature is not implemented yet.");
+//        this.lineId = d.readInt();
     }
 
     @Override
     public void write(DataOutput d) throws IOException {
-        throw new NotImplementedException("This feature is not implemented yet.");
+//        d.write(this.lineId);
     }
 
     @Override

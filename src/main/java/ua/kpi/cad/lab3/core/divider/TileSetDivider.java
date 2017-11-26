@@ -67,8 +67,7 @@ public abstract class TileSetDivider {
     public TileSetDivider(double minLat, double minLong, double maxLat,
                           double maxLong, int zoomLevel) {
         if (zoomLevel < HIGHEST_ZOOMLEVEL || zoomLevel > LOWEST_ZOOMLEVEL) {
-            throw new IllegalArgumentException("Invalid zoomlevel: "
-                    + zoomLevel);
+            throw new IllegalArgumentException("Invalid zoomlevel: " + zoomLevel);
         }
         this.minLat = minLat;
         this.minLong = minLong;
@@ -94,8 +93,7 @@ public abstract class TileSetDivider {
      * @return
      */
     public int getTileSetId(TileID id) {
-        if (id.x < 0 || id.x >= numTilesPerSide || id.y < 0
-                || id.y >= numTilesPerSide) {
+        if (id.x < 0 || id.x >= numTilesPerSide || id.y < 0 || id.y >= numTilesPerSide) {
             return -1;
         }
         return tileSetIds[id.x][id.y];
@@ -125,8 +123,7 @@ public abstract class TileSetDivider {
         for (int i = 0; i < getNumTilesPerSide(); i++) {
             for (int j = 0; j < getNumTilesPerSide(); j++) {
                 if (this.tileSetIds[i][j] == tileSetId) {
-                    logger.info("Rendering tile at id " + i + ", " + j + " z:"
-                            + zoomLevel);
+                    logger.info("Rendering tile at id " + i + ", " + j + " z:" + zoomLevel);
                     RenderedTileKey k = new RenderedTileKey();
                     k.tileIdX = i;
                     k.tileIdY = j;

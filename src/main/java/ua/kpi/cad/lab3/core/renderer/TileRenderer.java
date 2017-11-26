@@ -29,9 +29,9 @@ public abstract class TileRenderer {
     protected final BufferedImage image;
 
     protected List<TigerRecordType1> rt1 = new ArrayList<>();
-    protected List<TigerRecordType2> rt2 = new ArrayList<TigerRecordType2>();
-    protected List<BgnRecord> rbgn = new ArrayList<BgnRecord>();
-    protected List<PopRecord> rp = new ArrayList<PopRecord>();
+    protected List<TigerRecordType2> rt2 = new ArrayList<>();
+    protected List<BgnRecord> rbgn = new ArrayList<>();
+    protected List<PopRecord> rp = new ArrayList<>();
 
     public TileRenderer() {
         image = new BufferedImage(TILE_SZ, TILE_SZ, BufferedImage.TYPE_INT_ARGB);

@@ -61,11 +61,11 @@ public class HilbertDividerTest {
         // to make sure we break the curve up into segments properly
         divider.assignTileSetIds(7);
 
-//        assertEquals(divider.tileSetIds[0][0], 0);
-//        assertEquals(divider.tileSetIds[2][3], 0);
-//        assertEquals(divider.tileSetIds[3][3], 1);
-//        assertEquals(divider.tileSetIds[5][1], 1);
-//        assertEquals(divider.tileSetIds[6][1], 2);
+        assertEquals(divider.tileSetIds[0][0], 0);
+        assertEquals(divider.tileSetIds[2][3], 0);
+        assertEquals(divider.tileSetIds[3][3], 1);
+        assertEquals(divider.tileSetIds[5][1], 1);
+        assertEquals(divider.tileSetIds[6][1], 2);
     }
 
 }
