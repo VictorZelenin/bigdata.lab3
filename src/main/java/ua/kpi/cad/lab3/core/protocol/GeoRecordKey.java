@@ -41,4 +41,9 @@ public class GeoRecordKey implements WritableComparable<GeoRecordKey> {
     public void write(DataOutput d) throws IOException  {
         d.writeUTF(recordType);
     }
+
+    @Override
+    public String toString() {
+        return recordType;
+    }
 }

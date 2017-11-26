@@ -20,7 +20,7 @@ import org.apache.hadoop.io.WritableComparable;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
-public class TigerRecordType2 implements WritableComparable<TigerRecordType2> {
+public class TigerRecordType2 implements WritableComparable<TigerRecordType2>, Cloneable {
     public int compareTo(TigerRecordType2 o) {
         throw new RuntimeException("Not Implemented");
     }
@@ -81,5 +81,10 @@ public class TigerRecordType2 implements WritableComparable<TigerRecordType2> {
         for (double lon : listLong) {
             d.writeDouble(lon);
         }
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

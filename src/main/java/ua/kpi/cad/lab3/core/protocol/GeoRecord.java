@@ -19,7 +19,7 @@ import ua.kpi.cad.lab3.core.exception.NotImplementedException;
 @AllArgsConstructor
 @Setter
 @Getter
-public class GeoRecord implements WritableComparable<GeoRecord> {
+public class GeoRecord implements WritableComparable<GeoRecord>, Cloneable {
 
     /**
      * The marker field that determines
@@ -39,7 +39,6 @@ public class GeoRecord implements WritableComparable<GeoRecord> {
         if (Objects.equals(recordType, "1")) {
             recordType1 = new TigerRecordType1();
             this.recordType1.readFields(d);
-            System.out.println(recordType1);
         } else {
             recordType2 = new TigerRecordType2();
             this.recordType2.readFields(d);
@@ -59,5 +58,10 @@ public class GeoRecord implements WritableComparable<GeoRecord> {
 
     public int compareTo(GeoRecord o) {
         throw new NotImplementedException("This feature is not implemented yet.");
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
