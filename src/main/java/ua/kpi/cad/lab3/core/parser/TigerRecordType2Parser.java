@@ -42,7 +42,7 @@ public class TigerRecordType2Parser extends GeoRecordParser {
 
     private void checkRecordType(String entry) {
         val currentRecordType = entry.substring(RT_START_POSITION,
-                RT_START_POSITION + 1);
+                RT_START_POSITION + RT_LENGTH);
         if (!RECORD_TYPE_2.equals(currentRecordType)) {
             throw new WrongRecordTypeException("Passed record of type: " + currentRecordType +
                     ". must be " + RECORD_TYPE_2);
@@ -92,7 +92,7 @@ public class TigerRecordType2Parser extends GeoRecordParser {
         currentDecimal = parseDecimalString(currentLinePosition, fieldLength, entry);
         do {
             decimals.add(Double.valueOf(currentDecimal));
-            currentLinePosition += LONG_LENGTH + LAT_LENGTH;
+            currentLinePosition += LONG_LENGTH + LAT_LENGTH; // jump over to next position of longitude/latitude
             if (currentLinePosition >= entry.length()) {
                 break;
             }
@@ -127,6 +127,7 @@ public class TigerRecordType2Parser extends GeoRecordParser {
 
     private GeoRecord wrapInGeoRecord(TigerRecordType2 tigerRecordType2) {
         GeoRecord geoRecord = new GeoRecord();
+        geoRecord.setRecordType(RECORD_TYPE_2);
         geoRecord.setRecordType2(tigerRecordType2);
         return geoRecord;
     }

@@ -40,7 +40,7 @@ public class TigerRecordType2 implements WritableComparable<TigerRecordType2> {
     /**
      * The feature type. This field must be populated by a join
      */
-    private String featureType;
+    private String featureType = "";
     /**
      * The list of latitudes and longitudes
      */
@@ -48,8 +48,38 @@ public class TigerRecordType2 implements WritableComparable<TigerRecordType2> {
     private double listLong[];
 
     public void readFields(DataInput d) throws IOException {
+        lineId = d.readInt();
+        sequenceNum = d.readInt();
+        featureType = d.readUTF();
+
+        int listLatLenght = d.readInt();
+        double[] listLat = new double[listLatLenght];
+        for (int i = 0; i < listLatLenght; i++) {
+            listLat[i] = d.readDouble();
+        }
+        this.listLat = listLat;
+
+        int listLongLength = d.readInt();
+        double[] listLong = new double[listLongLength];
+        for (int i = 0; i < listLongLength; i++) {
+            listLong[i] = d.readDouble();
+        }
+        this.listLong = listLong;
     }
 
     public void write(DataOutput d) throws IOException {
+        d.writeInt(lineId);
+        d.writeInt(sequenceNum);
+        d.writeUTF(featureType);
+
+        d.writeInt(listLat.length);
+        for (double lat : listLat) {
+            d.writeDouble(lat);
+        }
+        
+        d.writeInt(listLong.length);
+        for (double lon : listLong) {
+            d.writeDouble(lon);
+        }
     }
 }
