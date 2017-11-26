@@ -382,8 +382,7 @@ public class GeoDriver {
         // we scale the number of rendering tasks depending on the zoomlevel and
         // the range we are mapping over. The estimate is based around wanting to
         // have ~300 render tasks for the northwestern quadrant of the US at zoomlevel 6
-        double delta = (maxLat - minLat) > (maxLong - minLong) ?
-                maxLat - minLat : maxLong - minLong;
+        double delta = (maxLat - minLat) > (maxLong - minLong) ? maxLat - minLat : maxLong - minLong;
         int areaScaleFactor = (int) (delta * delta);
         int constantScaleFactor = 225;
         int numRenderTasks = (int) Math.ceil(((double) areaScaleFactor / (double) constantScaleFactor)

@@ -118,8 +118,7 @@ public abstract class TileSetDivider {
      * the rendering process can be displayed.
      */
     public void renderTileSet(TileRenderer renderer, int tileSetId,
-                              OutputCollector<RenderedTileKey, RenderedTile> output, Reporter reporter)
-            throws IOException {
+                              OutputCollector<RenderedTileKey, RenderedTile> output, Reporter reporter) throws IOException {
         for (int i = 0; i < getNumTilesPerSide(); i++) {
             for (int j = 0; j < getNumTilesPerSide(); j++) {
                 if (this.tileSetIds[i][j] == tileSetId) {
@@ -209,8 +208,7 @@ public abstract class TileSetDivider {
      * Retrieve the Tile id that contains the specified latitude and longitude
      */
     public TileID getTileID(double Lat, double Long) {
-        return new TileID((int) Math.floor((Lat - minLat) / tileSize),
-                (int) Math.floor((Long - minLong) / tileSize));
+        return new TileID((int) Math.floor((Lat - minLat) / tileSize), (int) Math.floor((Long - minLong) / tileSize));
     }
 
     /**
