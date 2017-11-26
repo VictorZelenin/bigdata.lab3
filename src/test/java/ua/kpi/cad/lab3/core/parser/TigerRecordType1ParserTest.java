@@ -35,7 +35,7 @@ public class TigerRecordType1ParserTest {
         recordType1.setName("");
         recordType1.setType("1");
         recordType1.setDirectionSuffix("");
-        recordType1.setFeatureType("");
+        recordType1.setFeatureType("A41");
         recordType1.setStateCode(53);
         recordType1.setStartLat(47.474544);
         recordType1.setStartLong(-121.717231);

@@ -38,12 +38,44 @@ public class TigerRecordType1 implements WritableComparable<TigerRecordType1> {
 
     @Override
     public void readFields(DataInput d) throws IOException {
-//        this.lineId = d.readInt();
+        this.lineId = d.readInt();
+        this.prefix = d.readUTF();
+        this.name = d.readUTF();
+        this.type = d.readUTF();
+        this.directionSuffix = d.readUTF();
+        this.featureType = d.readUTF();
+        this.startAddressLeft = d.readLong();
+        this.startAddressRight = d.readLong();
+        this.endAddressLeft = d.readLong();
+        this.endAddressRight = d.readLong();
+        this.zipLeft = d.readInt();
+        this.zipRight = d.readInt();
+        this.stateCode = d.readInt();
+        this.startLat = d.readDouble();
+        this.startLong = d.readDouble();
+        this.endLat = d.readDouble();
+        this.endLong = d.readDouble();
     }
 
     @Override
     public void write(DataOutput d) throws IOException {
-//        d.write(this.lineId);
+        d.writeInt(lineId);
+        d.writeUTF(prefix);
+        d.writeUTF(name);
+        d.writeUTF(type);
+        d.writeUTF(directionSuffix);
+        d.writeUTF(featureType);
+        d.writeLong(startAddressLeft);
+        d.writeLong(startAddressRight);
+        d.writeLong(endAddressLeft);
+        d.writeLong(endAddressRight);
+        d.writeInt(zipLeft);
+        d.writeInt(zipRight);
+        d.writeInt(stateCode);
+        d.writeDouble(startLat);
+        d.writeDouble(startLong);
+        d.writeDouble(endLat);
+        d.writeDouble(endLong);
     }
 
     @Override

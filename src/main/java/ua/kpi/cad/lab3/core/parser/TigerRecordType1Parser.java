@@ -32,7 +32,7 @@ public class TigerRecordType1Parser extends GeoRecordParser {
         record.setName(row.substring(19, 49).trim());
         record.setType(row.substring(0, 1).trim());
         record.setDirectionSuffix(row.substring(53, 55).trim());
-        record.setFeatureType(row.substring(49, 53).trim());
+        record.setFeatureType(row.substring(55, 58).trim());
 
         record.setStartAddressLeft(tryParseLong(row.substring(58, 69).trim(), 0L));
         record.setEndAddressLeft(tryParseLong(row.substring(79, 80).trim(), 0L));

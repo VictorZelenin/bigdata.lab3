@@ -29,14 +29,16 @@ public class GeoRecordKey implements WritableComparable<GeoRecordKey> {
 
     @Override
     public int compareTo(GeoRecordKey o) {
-        throw new RuntimeException("Not Implemented");
+        return Integer.parseInt(recordType) - Integer.parseInt(o.recordType);
     }
 
     @Override
     public void readFields(DataInput d) throws IOException {
+        this.recordType = d.readUTF();
     }
 
     @Override
     public void write(DataOutput d) throws IOException  {
+        d.writeUTF(recordType);
     }
 }

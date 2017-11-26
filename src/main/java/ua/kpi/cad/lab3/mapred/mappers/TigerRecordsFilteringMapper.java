@@ -31,6 +31,7 @@ public class TigerRecordsFilteringMapper extends Mapper<Object, Text, GeoRecordK
         int recordType = Character.getNumericValue(text.charAt(0));
 
         GeoRecord geoRecord = parseGeoRecord(text.toString(), recordType);
+        geoRecord.setRecordType(String.valueOf(recordType));
 
         context.write(new GeoRecordKey(recordType), geoRecord);
     }

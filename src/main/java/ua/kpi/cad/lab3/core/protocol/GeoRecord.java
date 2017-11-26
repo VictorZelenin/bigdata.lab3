@@ -3,6 +3,7 @@ package ua.kpi.cad.lab3.core.protocol;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Objects;
 
 import lombok.*;
 import org.apache.hadoop.io.WritableComparable;
@@ -34,9 +35,26 @@ public class GeoRecord implements WritableComparable<GeoRecord> {
     private PopRecord popRecord;
 
     public void readFields(DataInput d) throws IOException {
+        this.recordType = d.readUTF();
+        if (Objects.equals(recordType, "1")) {
+            recordType1 = new TigerRecordType1();
+            this.recordType1.readFields(d);
+            System.out.println(recordType1);
+        } else {
+            recordType2 = new TigerRecordType2();
+            this.recordType2.readFields(d);
+        }
     }
 
     public void write(DataOutput d) throws IOException {
+        d.writeUTF(recordType);
+        if (recordType1 != null) {
+            recordType1.write(d);
+        }
+
+        if (recordType2 != null) {
+            recordType2.write(d);
+        }
     }
 
     public int compareTo(GeoRecord o) {

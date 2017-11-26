@@ -23,14 +23,12 @@ public class TigerRecordsJoinerReducer extends Reducer<IntWritable, GeoRecord, I
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
-//        TigerRecordsFilteringMapper.main(args);
-
         Configuration conf = new Configuration();
 
         Job job = Job.getInstance(conf, "TIGER DATA extract poly features");
         job.setJarByClass(TigerRecordsJoinerReducer.class);
         job.setMapperClass(TigerRecordsJoinerMapper.class);
-        job.setReducerClass(TigerRecordsJoinerReducer.class);
+//        job.setReducerClass(TigerRecordsJoinerReducer.class);
 
         job.setInputFormatClass(SequenceFileInputFormat.class);
 
@@ -40,7 +38,7 @@ public class TigerRecordsJoinerReducer extends Reducer<IntWritable, GeoRecord, I
         job.setOutputKeyClass(IntWritable.class);
         job.setOutputValueClass(GeoRecord.class);
 
-        job.setNumReduceTasks(1);
+        job.setNumReduceTasks(0);
         job.setOutputFormatClass(TextOutputFormat.class);
 
         FileInputFormat.addInputPath(job, new Path("filtered"));
