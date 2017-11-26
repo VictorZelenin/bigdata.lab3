@@ -19,19 +19,19 @@ import static ua.kpi.cad.lab3.core.GeoConstants.RECORD_TYPE_2;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TigerRecordType2Parser extends GeoRecordParser {
 
-    int RT_START_POSITION = 0;
-    int RT_LENGTH = 1;
-    int TLID_START_POSITION = 5;
-    int TLID_LENGTH = 10;
-    int RTSQ_START_POSITION = 15;
-    int RTSQ_LENGTH = 3;
-    int LONG1_START_POSITION = 18;
-    int LONG_LENGTH = 10;
-    int LAT1_START_POSITION = 28;
-    int LAT_LENGTH = 9;
+    private static final int RT_START_POSITION = 0;
+    private static final int RT_LENGTH = 1;
+    private static final int TLID_START_POSITION = 5;
+    private static final int TLID_LENGTH = 10;
+    private static final int RTSQ_START_POSITION = 15;
+    private static final int RTSQ_LENGTH = 3;
+    private static final int LONG1_START_POSITION = 18;
+    private static final int LONG_LENGTH = 10;
+    private static final int LAT1_START_POSITION = 28;
+    private static final int LAT_LENGTH = 9;
 
-    String EMPTY_LONG_VALUE = "+000.000000";
-    String EMPTY_LAT_VALUE = "+00.000000";
+    private static final String EMPTY_LONG_VALUE = "+000.000000";
+    private static final String EMPTY_LAT_VALUE = "+00.000000";
 
     @Override
     public GeoRecord parse(String entry) {
@@ -93,6 +93,9 @@ public class TigerRecordType2Parser extends GeoRecordParser {
         do {
             decimals.add(Double.valueOf(currentDecimal));
             currentLinePosition += LONG_LENGTH + LAT_LENGTH;
+            if (currentLinePosition >= entry.length()) {
+                break;
+            }
             currentDecimal = parseDecimalString(currentLinePosition, fieldLength, entry);
         } while (isNotEmpty(currentDecimal) && currentLinePosition < entry.length());
 

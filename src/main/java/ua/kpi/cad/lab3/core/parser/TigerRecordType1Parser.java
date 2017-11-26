@@ -1,7 +1,7 @@
 package ua.kpi.cad.lab3.core.parser;
 
 import org.apache.log4j.Logger;
-import ua.kpi.cad.lab3.core.exception.RecordFormatException;
+import ua.kpi.cad.lab3.core.exception.WrongRecordTypeException;
 import ua.kpi.cad.lab3.core.protocol.GeoRecord;
 import ua.kpi.cad.lab3.core.protocol.TigerRecordType1;
 
@@ -15,7 +15,7 @@ public class TigerRecordType1Parser extends GeoRecordParser {
     private static final Logger LOGGER = Logger.getLogger(TigerRecordType1Parser.class);
 
     @Override
-    public GeoRecord parse(String entry) throws RecordFormatException {
+    public GeoRecord parse(String entry) throws WrongRecordTypeException {
         GeoRecord geoRecord = new GeoRecord();
         TigerRecordType1 tigerRecord = parseTigerRecordType1(entry);
 
