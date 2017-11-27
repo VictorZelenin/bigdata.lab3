@@ -8,7 +8,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import ua.kpi.cad.lab3.core.protocol.GeoRecord;
 import ua.kpi.cad.lab3.core.protocol.GeoRecordKey;
 import ua.kpi.cad.lab3.mapred.mappers.TigerRecordsJoinerMapper;
@@ -57,6 +57,7 @@ public class TigerRecordsJoinerReducer extends Reducer<IntWritable, GeoRecord, G
         }
     }
 
+    // testing unit
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
         Configuration conf = new Configuration();
 
@@ -70,11 +71,11 @@ public class TigerRecordsJoinerReducer extends Reducer<IntWritable, GeoRecord, G
         job.setMapOutputKeyClass(IntWritable.class);
         job.setMapOutputValueClass(GeoRecord.class);
 
-        job.setOutputKeyClass(IntWritable.class);
+        job.setOutputKeyClass(GeoRecordKey.class);
         job.setOutputValueClass(GeoRecord.class);
 
         job.setNumReduceTasks(1);
-        job.setOutputFormatClass(TextOutputFormat.class);
+        job.setOutputFormatClass(SequenceFileOutputFormat.class);
 
         FileInputFormat.addInputPath(job, new Path("filtered"));
         FileOutputFormat.setOutputPath(job, new Path("joined"));

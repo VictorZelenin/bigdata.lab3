@@ -112,7 +112,7 @@ public abstract class TileSetDivider {
      * the renderer provided as the argument. The renderer should already have
      * all of the geographic features relevant to this tile set added before
      * calling this method.
-     * <p>
+     *
      * This method also takes an output collector so rendered tiles can be written
      * directly to the output stream and a reporter object so that the status of
      * the rendering process can be displayed.

@@ -44,30 +44,19 @@ public class GeoDriver {
     private static final String ARG_EXTRACT_TO_LOCAL_LONG = "--extract_to_local";
 
     // mapreduce config constants
-    public static final String MAXIMUM_SIMOULTANEOUS_REDUCES_PER_HOST_KEY =
-            "mapred.tasktracker.reduce.tasks.maximum";
-    private static final String TILE_SET_DIVIDER_TYPE_KEY =
-            "edu.washington.tigermap.divider";
-    private static final String TILE_RENDERER_TYPE_KEY =
-            "edu.washington.tigermap.renderer";
-    private static final String TILE_SET_MIN_LAT_KEY =
-            "edu.washington.tigermap.lat.min";
-    private static final String TILE_SET_MAX_LAT_KEY =
-            "edu.washington.tigermap.lat.max";
-    private static final String TILE_SET_MIN_LONG_KEY =
-            "edu.washington.tigermap.long.min";
-    private static final String TILE_SET_MAX_LONG_KEY =
-            "edu.washington.tigermap.long.max";
-    private static final String TILE_SET_ZOOMLEVEL_KEY =
-            "edu.washington.tigermap.zoomlevel";
-    private static final String NUM_RENDER_TASKS_KEY =
-            "edu.washington.cse490h.geo.numrendertasks";
+    public static final String MAXIMUM_SIMOULTANEOUS_REDUCES_PER_HOST_KEY = "mapred.tasktracker.reduce.tasks.maximum";
+    private static final String TILE_SET_DIVIDER_TYPE_KEY = "edu.washington.tigermap.divider";
+    private static final String TILE_RENDERER_TYPE_KEY = "edu.washington.tigermap.renderer";
+    private static final String TILE_SET_MIN_LAT_KEY = "edu.washington.tigermap.lat.min";
+    private static final String TILE_SET_MAX_LAT_KEY = "edu.washington.tigermap.lat.max";
+    private static final String TILE_SET_MIN_LONG_KEY = "edu.washington.tigermap.long.min";
+    private static final String TILE_SET_MAX_LONG_KEY = "edu.washington.tigermap.long.max";
+    private static final String TILE_SET_ZOOMLEVEL_KEY = "edu.washington.tigermap.zoomlevel";
+    private static final String NUM_RENDER_TASKS_KEY = "edu.washington.cse490h.geo.numrendertasks";
 
 
-    private static final String TILE_SET_DIVIDER_SIMPLE =
-            "SimpleDivider.class";
-    private static final String TILE_RENDERER_FAKE =
-            "FakeRenderer.class";
+    private static final String TILE_SET_DIVIDER_SIMPLE = "SimpleDivider.class";
+    private static final String TILE_RENDERER_FAKE = "FakeRenderer.class";
 
     /**
      * Here is where we run all of the mapreduce passes that get us from
@@ -407,12 +396,12 @@ public class GeoDriver {
         // set up the render parameters
         conf.set(TILE_RENDERER_TYPE_KEY, TILE_RENDERER_FAKE);
         conf.set(TILE_SET_DIVIDER_TYPE_KEY, TILE_SET_DIVIDER_SIMPLE);
-        conf.set(TILE_SET_MIN_LAT_KEY, "" + minLat);
-        conf.set(TILE_SET_MIN_LONG_KEY, "" + minLong);
-        conf.set(TILE_SET_MAX_LAT_KEY, "" + maxLat);
-        conf.set(TILE_SET_MAX_LONG_KEY, "" + maxLong);
-        conf.set(TILE_SET_ZOOMLEVEL_KEY, "" + zoomLevel);
-        conf.set(NUM_RENDER_TASKS_KEY, "" + numRenderTasks);
+        conf.set(TILE_SET_MIN_LAT_KEY, String.valueOf(minLat));
+        conf.set(TILE_SET_MIN_LONG_KEY, String.valueOf(minLong));
+        conf.set(TILE_SET_MAX_LAT_KEY, String.valueOf(maxLat));
+        conf.set(TILE_SET_MAX_LONG_KEY, String.valueOf(maxLong));
+        conf.set(TILE_SET_ZOOMLEVEL_KEY, String.valueOf(zoomLevel));
+        conf.set(NUM_RENDER_TASKS_KEY, String.valueOf(numRenderTasks));
 
         // We add all the paths from which we want to pull features to render
         String outputPathName = "output_render_z" + zoomLevel;

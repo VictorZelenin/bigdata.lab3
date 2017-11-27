@@ -32,8 +32,7 @@ public class RenderingMapper extends Mapper<GeoRecordKey, GeoRecord, IntWritable
             );
             context.write(new IntWritable(startTileSetId), value);
             context.write(new IntWritable(endTileSetId), value);
-        }
-        else {
+        } else {
             double[] listLatitudes = value.getRecordType2().getListLat();
             double[] listLongitude = value.getRecordType2().getListLong();
             for (int pointNum = 0; pointNum < listLatitudes.length; pointNum++) {
@@ -49,5 +48,10 @@ public class RenderingMapper extends Mapper<GeoRecordKey, GeoRecord, IntWritable
                 }
             }
         }
+    }
+
+    private void createDivider(Context context) {
+        divider = new SimpleDivider(47.084457, -122.541068, 47.780328, -121.065709, 1);
+        divider.assignTileSetIds(10);
     }
 }

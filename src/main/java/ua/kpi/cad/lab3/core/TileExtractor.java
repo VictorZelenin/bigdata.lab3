@@ -34,8 +34,7 @@ public class TileExtractor {
      * @throws IOException
      */
     @SuppressWarnings(value = "deprecation")
-    public void ExtractTiles(String path, JobConf conf, int numTasks)
-            throws IOException {
+    public void ExtractTiles(String path, JobConf conf, int numTasks) throws IOException {
         // create the tile directory structure
         for (int j = TileSetDivider.HIGHEST_ZOOMLEVEL; j <= TileSetDivider.LOWEST_ZOOMLEVEL; j++) {
             File tileDir = new File("tiles/" + j + "/");
@@ -65,8 +64,7 @@ public class TileExtractor {
             long len = fileSystem.getFileStatus(cPath).getLen();
 
             FileSplit fileSplit = new FileSplit(cPath, 0, len, conf);
-            SequenceFileRecordReader<RenderedTileKey, RenderedTile> reader =
-                    new SequenceFileRecordReader<RenderedTileKey, RenderedTile>(conf, fileSplit);
+            SequenceFileRecordReader<RenderedTileKey, RenderedTile> reader = new SequenceFileRecordReader<RenderedTileKey, RenderedTile>(conf, fileSplit);
 
             RenderedTileKey k = new RenderedTileKey();
             RenderedTile tile = new RenderedTile();
