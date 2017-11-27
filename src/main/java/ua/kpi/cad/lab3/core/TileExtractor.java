@@ -7,8 +7,10 @@ import java.io.IOException;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.TaskAttemptID;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileRecordReader;
+import org.apache.hadoop.mapreduce.task.TaskAttemptContextImpl;
 import org.apache.log4j.Logger;
 import ua.kpi.cad.lab3.core.divider.TileSetDivider;
 import ua.kpi.cad.lab3.core.protocol.RenderedTile;
@@ -36,7 +38,7 @@ public class TileExtractor {
      */
     @SuppressWarnings(value = "deprecation")
     public void ExtractTiles(String path, Job job, int numTasks)
-            throws IOException {
+            throws IOException, InterruptedException {
         // create the tile directory structure
         for (int j = TileSetDivider.HIGHEST_ZOOMLEVEL; j <= TileSetDivider.LOWEST_ZOOMLEVEL; j++) {
             File tileDir = new File("tiles/" + j + "/");
@@ -65,9 +67,9 @@ public class TileExtractor {
 
             long len = fileSystem.getFileStatus(cPath).getLen();
 
-            FileSplit fileSplit = new FileSplit(cPath, 0, len, );
-            SequenceFileRecordReader<RenderedTileKey, RenderedTile> reader = new SequenceFileRecordReader<>();
-            reader.initialize(fileSplit, );
+            FileSplit fileSplit = new FileSplit(cPath, 0, len, null);
+            SequenceFileRecordReader<RenderedTileKey, RenderedTile> reader = new SequenceFileRecordReader<RenderedTileKey, RenderedTile>();
+            reader.initialize(fileSplit, new TaskAttemptContextImpl(job.getConfiguration(), new TaskAttemptID()));
 
             RenderedTileKey k;
             RenderedTile tile;

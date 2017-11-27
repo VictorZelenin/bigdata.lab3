@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.mapred.MapReduceBase;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
@@ -401,13 +402,8 @@ public class GeoDriver {
         job.waitForCompletion(true);
 
         if (extract) {
-            try {
-                // extract tiles to the local disk
-                TileExtractor extractor = new TileExtractor();
-                extractor.ExtractTiles(outputPathName, job, 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            TileExtractor extractor = new TileExtractor();
+            extractor.ExtractTiles(outputPathName, job, 1);
         }
     }
 }
