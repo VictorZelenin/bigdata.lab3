@@ -9,6 +9,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
+import ua.kpi.cad.lab3.core.GeoRecordCloner;
 import ua.kpi.cad.lab3.core.TileExtractor;
 import ua.kpi.cad.lab3.core.divider.SimpleDivider;
 import ua.kpi.cad.lab3.core.divider.TileSetDivider;
@@ -31,7 +32,7 @@ public class RenderingReducer extends Reducer<IntWritable, GeoRecord, RenderedTi
         createDivider(context);
 
         for (GeoRecord record : values) {
-            renderer.addRecord(record);
+            renderer.addRecord(GeoRecordCloner.cloneGeoRecord(record, record.getRecordType()));
         }
 
         divider.renderTileSet(renderer, key.get(), context);
