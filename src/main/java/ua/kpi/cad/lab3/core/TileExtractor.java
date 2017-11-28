@@ -30,7 +30,6 @@ public class TileExtractor {
      *
      * @param path     The path to which the result of the mapreduce
      *                 was stored
-     * @param conf     The job conf associated with the render
      *                 mapreduce
      * @param numTasks The number of render tasks (number of reducers)
      * @throws IOException
@@ -54,7 +53,7 @@ public class TileExtractor {
             // build the filename string
             String filename = ("0000" + i);
             filename = filename.substring(filename.length() - 5);
-            filename = "part-" + filename;
+            filename = "part-r-" + filename;
             filename = (path.endsWith("/")) ? path + filename : path + "/" + filename;
             logger.info("Starting inflate from result file " + filename);
 

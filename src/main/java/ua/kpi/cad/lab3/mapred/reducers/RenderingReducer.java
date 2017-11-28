@@ -8,6 +8,8 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
+import ua.kpi.cad.lab3.core.TileExtractor;
 import ua.kpi.cad.lab3.core.divider.SimpleDivider;
 import ua.kpi.cad.lab3.core.divider.TileSetDivider;
 import ua.kpi.cad.lab3.core.protocol.GeoRecord;
@@ -52,14 +54,16 @@ public class RenderingReducer extends Reducer<IntWritable, GeoRecord, RenderedTi
         job.setOutputKeyClass(RenderedTileKey.class);
         job.setOutputValueClass(RenderedTile.class);
 
-
+        job.setOutputFormatClass(SequenceFileOutputFormat.class);
         job.setNumReduceTasks(10);
-//        job.setOutputFormatClass(TextOutputFormat.class);
 
         FileInputFormat.addInputPath(job, new Path("joined"));
         FileOutputFormat.setOutputPath(job, new Path("rendered"));
 
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+        job.waitForCompletion(true);
+
+        TileExtractor extractor = new TileExtractor();
+        extractor.ExtractTiles("rendered", job, 1);
     }
 
     private void createDivider(Context context) {
