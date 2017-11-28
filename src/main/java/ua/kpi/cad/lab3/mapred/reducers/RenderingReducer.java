@@ -42,7 +42,7 @@ public class RenderingReducer extends Reducer<IntWritable, GeoRecord, RenderedTi
         Job job = Job.getInstance(conf, "TIGER DATA render pass");
         job.setJarByClass(RenderingReducer.class);
         job.setMapperClass(RenderingMapper.class);
-//        job.setReducerClass(TigerRecordsJoinerReducer.class);
+        job.setReducerClass(RenderingReducer.class);
 
         job.setInputFormatClass(SequenceFileInputFormat.class);
 
@@ -53,7 +53,7 @@ public class RenderingReducer extends Reducer<IntWritable, GeoRecord, RenderedTi
         job.setOutputValueClass(RenderedTile.class);
 
 
-        job.setNumReduceTasks(0);
+        job.setNumReduceTasks(10);
 //        job.setOutputFormatClass(TextOutputFormat.class);
 
         FileInputFormat.addInputPath(job, new Path("joined"));
