@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class RenderingMapper extends Mapper<GeoRecordKey, GeoRecord, IntWritable, GeoRecord> {
 
-    TileSetDivider divider;
+    private TileSetDivider divider;
 
     @Override
     protected void map(GeoRecordKey key, GeoRecord value, Context context) throws IOException, InterruptedException {
