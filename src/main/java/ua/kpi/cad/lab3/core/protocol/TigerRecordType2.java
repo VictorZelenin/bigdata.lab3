@@ -48,7 +48,6 @@ public class TigerRecordType2 implements WritableComparable<TigerRecordType2>, C
     private double listLong[];
 
     public void readFields(DataInput d) throws IOException {
-        try {
             lineId = d.readInt();
 
             sequenceNum = d.readInt();
@@ -67,8 +66,6 @@ public class TigerRecordType2 implements WritableComparable<TigerRecordType2>, C
                 listLong[i] = d.readDouble();
             }
             this.listLong = listLong;
-        }
-        catch (Exception e) {}
     }
 
     public void write(DataOutput d) throws IOException {

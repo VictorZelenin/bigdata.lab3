@@ -30,8 +30,12 @@ public class RenderingMapper extends Mapper<GeoRecordKey, GeoRecord, IntWritable
                     divider.getTileID(value.getRecordType1().getEndLat(),
                             value.getRecordType1().getEndLong())
             );
-            context.write(new IntWritable(startTileSetId), value);
-            context.write(new IntWritable(endTileSetId), value);
+            if (startTileSetId == endTileSetId) {
+                context.write(new IntWritable(startTileSetId), value);
+            } else {
+                context.write(new IntWritable(startTileSetId), value);
+                context.write(new IntWritable(endTileSetId), value);
+            }
         } else {
             double[] listLatitudes = value.getRecordType2().getListLat();
             double[] listLongitude = value.getRecordType2().getListLong();
