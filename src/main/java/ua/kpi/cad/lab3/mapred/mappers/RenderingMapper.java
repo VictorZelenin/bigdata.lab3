@@ -3,6 +3,7 @@ package ua.kpi.cad.lab3.mapred.mappers;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Mapper;
 import ua.kpi.cad.lab3.core.GeoConstants;
+import ua.kpi.cad.lab3.core.GeoRecordCloner;
 import ua.kpi.cad.lab3.core.divider.SimpleDivider;
 import ua.kpi.cad.lab3.core.divider.TileSetDivider;
 import ua.kpi.cad.lab3.core.protocol.GeoRecord;
@@ -31,10 +32,10 @@ public class RenderingMapper extends Mapper<GeoRecordKey, GeoRecord, IntWritable
                             value.getRecordType1().getEndLong())
             );
             if (startTileSetId == endTileSetId) {
-                context.write(new IntWritable(startTileSetId), value);
+                context.write(new IntWritable(startTileSetId), GeoRecordCloner.cloneGeoRecord(value, "1"));
             } else {
-                context.write(new IntWritable(startTileSetId), value);
-                context.write(new IntWritable(endTileSetId), value);
+                context.write(new IntWritable(startTileSetId), GeoRecordCloner.cloneGeoRecord(value, "1"));
+                context.write(new IntWritable(endTileSetId), GeoRecordCloner.cloneGeoRecord(value, "1"));
             }
         } else {
             double[] listLatitudes = value.getRecordType2().getListLat();
@@ -48,7 +49,7 @@ public class RenderingMapper extends Mapper<GeoRecordKey, GeoRecord, IntWritable
                 IntWritable currentTileSetId = new IntWritable(divider.getTileSetId(tileID));
                 if (!passedSetIds.contains(currentTileSetId)) {
                     passedSetIds.add(currentTileSetId);
-                    context.write(currentTileSetId, value);
+                    context.write(currentTileSetId, GeoRecordCloner.cloneGeoRecord(value, "2"));
                 }
             }
         }

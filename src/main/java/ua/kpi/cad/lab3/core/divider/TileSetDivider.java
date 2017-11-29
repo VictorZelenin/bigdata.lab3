@@ -2,8 +2,9 @@ package ua.kpi.cad.lab3.core.divider;
 
 import java.io.IOException;
 
-import org.apache.hadoop.mapred.OutputCollector;
-import org.apache.hadoop.mapred.Reporter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.log4j.Logger;
 import ua.kpi.cad.lab3.core.protocol.RenderedTile;
@@ -121,7 +122,6 @@ public abstract class TileSetDivider {
     public void renderTileSet(TileRenderer renderer, int tileSetId,
                               Reducer.Context context)
             throws IOException, InterruptedException {
-        ;
         for (int i = 0; i < getNumTilesPerSide(); i++) {
             for (int j = 0; j < getNumTilesPerSide(); j++) {
                 if (this.tileSetIds[i][j] == tileSetId) {
@@ -171,22 +171,12 @@ public abstract class TileSetDivider {
         return numTilesPerSide;
     }
 
+    @Data
+    @AllArgsConstructor
+    @Getter
     public static class TileID {
-        public TileID(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        int x;
-        int y;
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
+        private int x;
+        private int y;
     }
 
     public static class LatLong {

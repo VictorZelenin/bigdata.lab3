@@ -48,24 +48,24 @@ public class TigerRecordType2 implements WritableComparable<TigerRecordType2>, C
     private double listLong[];
 
     public void readFields(DataInput d) throws IOException {
-            lineId = d.readInt();
+        lineId = d.readInt();
 
-            sequenceNum = d.readInt();
-            featureType = d.readUTF();
+        sequenceNum = d.readInt();
+        featureType = d.readUTF();
 
-            int listLatLenght = d.readInt();
-            double[] listLat = new double[listLatLenght];
-            for (int i = 0; i < listLatLenght; i++) {
-                listLat[i] = d.readDouble();
-            }
-            this.listLat = listLat;
+        int listLatLenght = d.readInt();
+        double[] listLat = new double[listLatLenght];
+        for (int i = 0; i < listLatLenght; i++) {
+            listLat[i] = d.readDouble();
+        }
+        this.listLat = listLat;
 
-            int listLongLength = d.readInt();
-            double[] listLong = new double[listLongLength];
-            for (int i = 0; i < listLongLength; i++) {
-                listLong[i] = d.readDouble();
-            }
-            this.listLong = listLong;
+        int listLongLength = d.readInt();
+        double[] listLong = new double[listLongLength];
+        for (int i = 0; i < listLongLength; i++) {
+            listLong[i] = d.readDouble();
+        }
+        this.listLong = listLong;
     }
 
     public void write(DataOutput d) throws IOException {
@@ -77,7 +77,7 @@ public class TigerRecordType2 implements WritableComparable<TigerRecordType2>, C
         for (double lat : listLat) {
             d.writeDouble(lat);
         }
-        
+
         d.writeInt(listLong.length);
         for (double lon : listLong) {
             d.writeDouble(lon);
