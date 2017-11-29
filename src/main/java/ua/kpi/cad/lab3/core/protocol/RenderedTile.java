@@ -16,8 +16,13 @@ public class RenderedTile implements Writable {
     public byte tileData[] = null;
 
     public void readFields(DataInput d) throws IOException {
+        int tileDataSize = d.readInt();
+        tileData = new byte[tileDataSize];
+        d.readFully(tileData);
     }
 
     public void write(DataOutput d) throws IOException {
+        d.writeInt(tileData.length);
+        d.write(tileData);
     }
 }

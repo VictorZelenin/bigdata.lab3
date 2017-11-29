@@ -21,8 +21,14 @@ public class RenderedTileKey implements WritableComparable<RenderedTileKey> {
     public int tileIdY;
 
     public void readFields(DataInput d) throws IOException {
+        zoomLevel = d.readInt();
+        tileIdX = d.readInt();
+        tileIdY = d.readInt();
     }
 
     public void write(DataOutput d) throws IOException  {
+        d.writeInt(zoomLevel);
+        d.writeInt(tileIdX);
+        d.writeInt(tileIdY);
     }
 }
