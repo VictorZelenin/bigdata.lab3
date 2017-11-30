@@ -56,7 +56,7 @@ public class RenderingReducer extends Reducer<IntWritable, GeoRecord, RenderedTi
         job.setOutputValueClass(RenderedTile.class);
 
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
-        job.setNumReduceTasks(5);
+        job.setNumReduceTasks(10);
 
         FileInputFormat.addInputPath(job, new Path("joined"));
         FileOutputFormat.setOutputPath(job, new Path("rendered"));
@@ -64,11 +64,11 @@ public class RenderingReducer extends Reducer<IntWritable, GeoRecord, RenderedTi
         job.waitForCompletion(true);
 
         TileExtractor extractor = new TileExtractor();
-        extractor.ExtractTiles("rendered", job, 1);
+        extractor.ExtractTiles("rendered", job, 10);
     }
 
     private void createDivider(Context context) {
-        divider = new SimpleDivider(47.084457, -122.541068, 47.780328, -121.065709, 5);
-        divider.assignTileSetIds(5);
+        divider = new SimpleDivider(47.084457, -122.541068, 47.780328, -121.065709, 4);
+        divider.assignTileSetIds(10);
     }
 }
