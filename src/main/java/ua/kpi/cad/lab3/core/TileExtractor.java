@@ -39,7 +39,7 @@ public class TileExtractor {
             throws IOException, InterruptedException {
         // create the tile directory structure
         for (int j = TileSetDivider.HIGHEST_ZOOMLEVEL; j <= TileSetDivider.LOWEST_ZOOMLEVEL; j++) {
-            File tileDir = new File("tiles/" + j + "/");
+            File tileDir = new File("tiles/" + (j-1) + "/");
             if (!tileDir.exists()) {
                 tileDir.mkdirs();
             }
