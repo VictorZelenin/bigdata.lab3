@@ -1,5 +1,7 @@
 package ua.kpi.cad.lab3.core.divider;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import lombok.AllArgsConstructor;
@@ -125,18 +127,23 @@ public abstract class TileSetDivider {
         for (int i = 0; i < getNumTilesPerSide(); i++) {
             for (int j = 0; j < getNumTilesPerSide(); j++) {
                 if (this.tileSetIds[i][j] == tileSetId) {
-                    logger.info("Rendering tile at id " + i + ", " + j + " z:" + zoomLevel);
+//                    logger.info("Rendering tile at id " + i + ", " + j + " z:" + zoomLevel);
                     RenderedTileKey k = new RenderedTileKey();
                     k.tileIdX = i;
                     k.tileIdY = j;
                     k.zoomLevel = zoomLevel;
 
                     // render this tile and write it to the DFS
-                    RenderedTile t = new RenderedTile();
+//                    RenderedTile t = new RenderedTile();
                     renderer.setTile(this, new TileID(i, j));
-                    t.tileData = renderer.renderTile();
-                    context.write(k, t);
-                    context.getCounter("Rendered Tiles", "Tile Set " + tileSetId).increment(1);
+
+                    File f = new File("tiles/" + k.zoomLevel + "/" + k.tileIdX
+                            + "_" + k.tileIdY + "_" + k.zoomLevel + ".png");
+                    FileOutputStream fos = new FileOutputStream(f);
+                    fos.write(renderer.renderTile());
+                    fos.close();
+//                    context.write(k, t);
+//                    context.getCounter("Rendered Tiles", "Tile Set " + tileSetId).increment(1);
                 }
             }
         }

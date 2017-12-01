@@ -56,7 +56,7 @@ public class RenderingMapper extends Mapper<GeoRecordKey, GeoRecord, IntWritable
     }
 
     private void createDivider(Context context) {
-        divider = new SimpleDivider(47.084457, -122.541068, 47.780328, -121.065709, 4);
+        divider = new SimpleDivider(47, -122, 47, -121, 5);
         divider.assignTileSetIds(10);
     }
 }

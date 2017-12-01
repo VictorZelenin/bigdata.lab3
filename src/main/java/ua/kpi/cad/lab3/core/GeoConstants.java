@@ -131,7 +131,7 @@ public class GeoConstants {
      */
     public static final String FEATURE_CLASS_D = "D";
     /**
-     * Phsical Feature
+     * Physical Feature
      */
     public static final String FEATURE_CLASS_E = "E";
     /**

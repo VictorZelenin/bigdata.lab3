@@ -68,7 +68,7 @@ public class RenderingReducer extends Reducer<IntWritable, GeoRecord, RenderedTi
     }
 
     private void createDivider(Context context) {
-        divider = new SimpleDivider(47.084457, -122.541068, 47.780328, -121.065709, 4);
+        divider = new SimpleDivider(47, -122, 48, -121, 5);
         divider.assignTileSetIds(10);
     }
 }

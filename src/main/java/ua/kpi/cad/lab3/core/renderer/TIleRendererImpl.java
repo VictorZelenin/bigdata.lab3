@@ -1,5 +1,6 @@
 package ua.kpi.cad.lab3.core.renderer;
 
+import com.google.common.primitives.Ints;
 import ua.kpi.cad.lab3.core.protocol.TigerRecordType1;
 import ua.kpi.cad.lab3.core.protocol.TigerRecordType2;
 
@@ -9,10 +10,8 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import static javax.imageio.ImageIO.getImageWritersBySuffix;
 
@@ -57,43 +56,153 @@ public class TIleRendererImpl extends TileRenderer {
         for (Map.Entry<TigerRecordType1, List<TigerRecordType2>> entry : joinedRecords.entrySet()) {
             TigerRecordType1 recordType1 = entry.getKey();
             List<TigerRecordType2> recordTypes2 = entry.getValue();
-            if (recordType1.getFeatureType().substring(0, 1).equals("A")) {
-                renderRoad(g, recordType1, recordTypes2, Integer.parseInt(recordType1.getFeatureType().substring(1, 2)));
+            String type = recordType1.getFeatureType().substring(0, 1);
+            if (type.equals("A") || type.equals("B") || type.equals("H")) {
+                int size = Integer.parseInt(recordType1.getFeatureType().substring(1, 2));
+                renderLine(g, recordType1, recordTypes2, size, type);
+            } else if (type.equals("D") || type.equals("E")) {
+                renderPolygon(g, recordType1, recordTypes2, type);
             }
         }
     }
 
-    private void renderRoad(Graphics2D g, TigerRecordType1 recordType1, List<TigerRecordType2> recordTypes2, int roadType) {
+    private void renderPolygon(Graphics2D g, TigerRecordType1 recordType1, List<TigerRecordType2> recordTypes2, String polygonType) {
         Color color;
-
-        switch (roadType) {
-            case 1:
-                color = new Color(0xFF6F00);
+        switch (polygonType) {
+            case "D":
+                color = Color.YELLOW;
                 break;
-            case 2:
-                color = new Color(0xF57F17);
-                break;
-            case 3:
-                color = new Color(0xFFA000);
-                break;
-            case 4:
-                color = new Color(0xFFC107);
-                break;
-            case 5:
-                color = new Color(0xFFD54F);
-                break;
-            case 6:
-                color = new Color(0xFFECB3);
-                break;
-            case 7:
-                color = new Color(0x8D6E63);
+            case "E":
+                color = Color.BLUE;
                 break;
             default:
                 color = Color.RED;
-
         }
 
-        g.setStroke(new BasicStroke(8 - roadType));
+
+        g.setStroke(new BasicStroke(1));
+        g.setColor(color);
+
+        List<Integer> xPoints = new ArrayList<>();
+        List<Integer> yPoints = new ArrayList<>();
+
+        if (recordTypes2.isEmpty()) {
+            xPoints.add(getXFromLon(recordType1.getStartLong()));
+            xPoints.add(getXFromLon(recordType1.getEndLong()));
+            yPoints.add(getYFromLat(recordType1.getStartLat()));
+            yPoints.add(getYFromLat(recordType1.getEndLat()));
+        } else {
+            double[] lats;
+            double[] longs;
+            for (TigerRecordType2 recordType2 : recordTypes2) {
+                lats = recordType2.getListLat();
+                longs = recordType2.getListLong();
+                for (int i = 0; i < lats.length; i++) {
+                    xPoints.add(getXFromLon(longs[i]));
+                    yPoints.add(getYFromLat(lats[i]));
+                }
+            }
+        }
+
+        if (polygonType.equals("D")) {
+            g.fillPolygon(Ints.toArray(xPoints), Ints.toArray(yPoints), xPoints.size());
+        }
+
+        if (polygonType.equals("E")) {
+            g.drawPolygon(Ints.toArray(xPoints), Ints.toArray(yPoints), xPoints.size());
+        }
+    }
+
+    private void renderLine(Graphics2D g, TigerRecordType1 recordType1, List<TigerRecordType2> recordTypes2, int lineSize, String lineType) {
+        Color color;
+
+        switch (lineType) {
+            case "A":
+                switch (lineSize) {
+                    case 1:
+                        color = new Color(0xFF6F00);
+                        break;
+                    case 2:
+                        color = new Color(0xF57F17);
+                        break;
+                    case 3:
+                        color = new Color(0xFFA000);
+                        break;
+                    case 4:
+                        color = new Color(0xFFC107);
+                        break;
+                    case 5:
+                        color = new Color(0x6D4C41);
+                        break;
+                    case 6:
+                        color = new Color(0x8D6E63);
+                        break;
+                    case 7:
+                        color = new Color(0xBCAAA4);
+                        break;
+                    default:
+                        color = Color.RED;
+                }
+                break;
+            case "B":
+                switch (lineSize) {
+                    case 1:
+                        color = new Color(0x424242);
+                        break;
+                    case 2:
+                        color = new Color(0x616161);
+                        break;
+                    case 3:
+                        color = new Color(0x757575);
+                        break;
+                    case 4:
+                        color = new Color(0x9E9E9E);
+                        break;
+                    case 5:
+                        color = new Color(0xBDBDBD);
+                        break;
+                    default:
+                        color = Color.RED;
+                }
+                break;
+            case "H":
+                switch (lineSize) {
+                    case 0:
+                        color = new Color(0x81D4FA);
+                        break;
+                    case 1:
+                        color = new Color(0x0277BD);
+                        break;
+                    case 2:
+                        color = new Color(0x03A9F4);
+                        break;
+                    case 3:
+                        color = new Color(0x448AFF);
+                        break;
+                    case 4:
+                        color = new Color(0x2962FF);
+                        break;
+                    case 5:
+                        color = new Color(0x00838F);
+                        break;
+                    case 6:
+                        color = new Color(0x536DFE);
+                        break;
+                    case 7:
+                        color = new Color(0x3D5AFE);
+                        break;
+                    case 8:
+                        color = new Color(0x81D4FA);
+                        break;
+                    default:
+                        color = Color.RED;
+                }
+                break;
+            default:
+                color = Color.RED;
+        }
+
+        g.setStroke(new BasicStroke((float) (8 - lineSize) / 2));
         g.setColor(color);
 
         if (recordTypes2.isEmpty()) {
