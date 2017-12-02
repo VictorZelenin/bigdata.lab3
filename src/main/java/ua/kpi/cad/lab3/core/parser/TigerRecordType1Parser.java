@@ -5,13 +5,15 @@ import ua.kpi.cad.lab3.core.exception.WrongRecordTypeException;
 import ua.kpi.cad.lab3.core.protocol.GeoRecord;
 import ua.kpi.cad.lab3.core.protocol.TigerRecordType1;
 
+import java.io.Serializable;
+
 /**
  * Parser chooses needed fields from first type of record
  *
  * It accepts single line from tiger RT1 file, and convert
  * it to GeoRecord.
  */
-public class TigerRecordType1Parser extends GeoRecordParser {
+public class TigerRecordType1Parser extends GeoRecordParser implements Serializable {
     private static final Logger LOGGER = Logger.getLogger(TigerRecordType1Parser.class);
 
     @Override

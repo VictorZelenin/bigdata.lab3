@@ -3,6 +3,7 @@ package ua.kpi.cad.lab3.core.protocol;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Objects;
 
 import lombok.*;
@@ -19,7 +20,7 @@ import ua.kpi.cad.lab3.core.exception.NotImplementedException;
 @AllArgsConstructor
 @Setter
 @Getter
-public class GeoRecord implements WritableComparable<GeoRecord>, Cloneable {
+public class GeoRecord implements WritableComparable<GeoRecord>, Cloneable, Serializable {
 
     /**
      * The marker field that determines

@@ -7,6 +7,7 @@ import ua.kpi.cad.lab3.core.exception.WrongRecordTypeException;
 import ua.kpi.cad.lab3.core.protocol.GeoRecord;
 import ua.kpi.cad.lab3.core.protocol.TigerRecordType2;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import static ua.kpi.cad.lab3.core.GeoConstants.RECORD_TYPE_2;
  * parsers chooses needed fields from second type of record
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class TigerRecordType2Parser extends GeoRecordParser {
+public class TigerRecordType2Parser extends GeoRecordParser implements Serializable {
 
     private static final int RT_START_POSITION = 0;
     private static final int RT_LENGTH = 1;

@@ -3,6 +3,7 @@ package ua.kpi.cad.lab3.core.protocol;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.Serializable;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,7 +21,7 @@ import org.apache.hadoop.io.WritableComparable;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
-public class TigerRecordType2 implements WritableComparable<TigerRecordType2>, Cloneable {
+public class TigerRecordType2 implements WritableComparable<TigerRecordType2>, Cloneable, Serializable {
     public int compareTo(TigerRecordType2 o) {
         throw new RuntimeException("Not Implemented");
     }

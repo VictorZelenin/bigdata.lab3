@@ -16,7 +16,7 @@ import ua.kpi.cad.lab3.core.exception.NotImplementedException;
 @AllArgsConstructor
 @Setter
 @Getter
-public class TigerRecordType1 implements WritableComparable<TigerRecordType1>, Cloneable {
+public class TigerRecordType1 implements WritableComparable<TigerRecordType1>, Cloneable, Serializable {
     // The fields below are all from the TIGER/Line record type 1 with the same names as below
     private int lineId; // TLID (6,15)
     private String prefix; // FEDIRP (18, 19)

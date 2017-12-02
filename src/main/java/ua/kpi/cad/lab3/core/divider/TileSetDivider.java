@@ -3,6 +3,7 @@ package ua.kpi.cad.lab3.core.divider;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,9 +20,7 @@ import ua.kpi.cad.lab3.core.renderer.TileRenderer;
  *
  * @author Slava Chernyak
  */
-public abstract class TileSetDivider {
-    private final Logger logger = Logger.getLogger(this.getClass().getCanonicalName());
-
+public abstract class TileSetDivider implements Serializable {
 	/*
      * Here are the approximate zoom levels to linear distance relations for
 	 * a side of a tile:

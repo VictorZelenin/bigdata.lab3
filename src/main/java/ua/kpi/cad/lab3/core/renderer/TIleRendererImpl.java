@@ -10,12 +10,13 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 import java.util.List;
 
 import static javax.imageio.ImageIO.getImageWritersBySuffix;
 
-public class TIleRendererImpl extends TileRenderer {
+public class TIleRendererImpl extends TileRenderer implements Serializable {
     private final Map<TigerRecordType1, List<TigerRecordType2>> joinedRecords = new HashMap<>();
 
     @Override
@@ -50,7 +51,7 @@ public class TIleRendererImpl extends TileRenderer {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // clear the background to white
-        g.setColor(Color.WHITE);
+        g.setColor(new Color(0xC5E1A5));
         g.fillRect(0, 0, TILE_SZ, TILE_SZ);
 
         for (Map.Entry<TigerRecordType1, List<TigerRecordType2>> entry : joinedRecords.entrySet()) {

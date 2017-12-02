@@ -1,11 +1,13 @@
 package ua.kpi.cad.lab3.core.divider;
 
+import java.io.Serializable;
+
 /**
  * This is a simple Tile Set Divider that splits the Mappable Range into
  * tile sets by assigning every row of tiles a set id modulo the number
  * of render tasks.
  */
-public class SimpleDivider extends TileSetDivider {
+public class SimpleDivider extends TileSetDivider implements Serializable {
 
     public SimpleDivider(double minLat, double minLong, double maxLat, double maxLong, int zoomLevel) {
         super(minLat, minLong, maxLat, maxLong, zoomLevel);
